@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TextInput, Alert, Button } from "react-native";
 import styles from "../styles/styledcomponents";
+import { login } from "../utils/action";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -12,7 +13,7 @@ export default function LoginScreen() {
     return re.test(String(email).toLowerCase());
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) {
       setError("Email and password are required.");
       return;
@@ -23,8 +24,10 @@ export default function LoginScreen() {
       return;
     }
 
-    setError("");
-    Alert.alert("Login Successful!", `Welcome back, ${email}!`);
+    if (error.length == 0) {
+      await login(email, password);
+      Alert.alert("Login Successful!", `Welcome back, ${email}!`);
+    }
   };
 
   return (
@@ -49,9 +52,12 @@ export default function LoginScreen() {
         onChangeText={setPassword}
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Log In</Text>
-      </TouchableOpacity>
+      <Button
+        onPress={() => handleLogin}
+        title="Log In"
+        color="#11960c"
+        accessibilityLabel="Learn more about this purple button"
+      />
     </View>
   );
 }
