@@ -1,7 +1,16 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  Button,
+} from "react-native";
 import styles from "../styles/styledcomponents";
 import { useRouter } from "expo-router";
+import { register } from "../utils/action";
+import { hashSync } from "bcrypt-ts";
 
 export default function SignupScreen() {
   const router = useRouter();
@@ -33,9 +42,11 @@ export default function SignupScreen() {
       return;
     }
 
-    setError("");
-    Alert.alert("Signup Successful!", "You can now log in.");
-    router.push("/login"); //this takes to login page on successful sign up
+    if (error.length == 0) {
+      register(firstName, lastName, email, password);
+      router.push("/login");
+      Alert.alert("Signup Successful!", "You can now log in.");
+    }
   };
 
   return (
@@ -73,10 +84,12 @@ export default function SignupScreen() {
         value={password}
         onChangeText={setPassword}
       />
-
-      <TouchableOpacity style={styles.button} onPress={handleSignup}>
-        <Text style={styles.buttonText}>Sign Up</Text>
-      </TouchableOpacity>
+      <Button
+        onPress={handleSignup}
+        title="Sign Up"
+        color="#11960c"
+        accessibilityLabel="Learn more about this purple button"
+      />
     </View>
   );
 }
