@@ -8,4 +8,4 @@ Tech Stack - React Native, Firebase, OpenCV(for image processing), Machine learn
 
 Impact - Compare the number of smart meals purchased initially vs after the point system has been implemented. 
 
-Point system - for every meal purchased for $5, the user gets 10 points. For 100 points, user can redeem that for the selected number of 
+Point system - for every meal purchased for $5, the user gets 10 points. For 100 points, user can redeem that for the selected number of points 
