@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     justifyContent: "center",
@@ -14,6 +15,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: "#333",
   },
+  
+  logo: {
+    width: 300, 
+    height: 300,
+    marginBottom: 5
+  },
   input: {
     width: "100%",
     padding: 15,
@@ -22,7 +29,21 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
     borderRadius: 8,
     backgroundColor: "#fff",
-    color: "#333", // Visible text color
+    color: "#333", 
+  },
+  homeTitle: {
+    fontSize: 36,
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  homeSubtitle: {
+    fontSize: 18,
+    color: "#666",
+    textAlign: "center",
+    marginHorizontal: 20,
+    marginBottom: 20,
   },
   button: {
     width: "100%",
@@ -35,9 +56,29 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
   },
+  // Specific styles for Login/Signup buttons
+  loginButton: {
+    backgroundColor: "green",
+  },
+  signupButton: {
+    backgroundColor: "green",
+  },
+  // Specific styles for Main Page buttons
+  walletButton: {
+    backgroundColor: "#4CAF50", // Green button for Wallet
+  },
+  profileButton: {
+    backgroundColor: "#2196F3", // Blue button for Profile
+  },
+  qrButton: {
+    backgroundColor: "#FF9800", // Orange button for QR Code
+  },
   errorText: {
     color: "red",
     marginBottom: 10,
+  },
+  activityIndicator: {
+    marginTop: 20,
   },
 });
 
