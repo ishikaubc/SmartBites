@@ -1,80 +1,33 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import React from "react";
+import { View, Text, Image, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router"; // Use routing for navigation
 import styles from "../styles/styledcomponents";
-import { useRouter } from "expo-router";
 
-export default function SignupScreen() {
-  const router = useRouter();
-
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-
-  const validateEmail = (email: string) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(String(email).toLowerCase());
-  };
-
-  const handleSignup = () => {
-    if (!firstName || !lastName || !email || !password) {
-      setError("All fields are required.");
-      return;
-    }
-
-    if (!validateEmail(email)) {
-      setError("Please enter a valid email address.");
-      return;
-    }
-
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters long.");
-      return;
-    }
-
-    setError("");
-    Alert.alert("Signup Successful!", "You can now log in.");
-    router.push("/login"); //this takes to login page on successful sign up
-  };
+export default function Page() {
+  const router = useRouter(); 
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sign Up</Text>
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}
-
-      <TextInput
-        style={styles.input}
-        placeholder="First Name"
-        placeholderTextColor="#888"
-        value={firstName}
-        onChangeText={setFirstName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Last Name"
-        placeholderTextColor="#888"
-        value={lastName}
-        onChangeText={setLastName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        placeholderTextColor="#888"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor="#888"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
+      {/* Logo */}
+      <Image
+        source={require("../assets/images/smartbites-2-removebg-preview.png")}
+        style={styles.logo}
+        resizeMode="contain"
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleSignup}>
+      {/* Title */}
+      <Text style={styles.homeTitle}>Welcome to SmartBites</Text>
+
+      {/* Subtitle */}
+      <Text style={styles.homeSubtitle}>
+        Your smart companion for meal tracking and rewards.
+      </Text>
+
+      {/* Sign Up Button */}
+      <TouchableOpacity
+        style={[styles.button, styles.signupButton]}
+        onPress={() => router.push("/signup")} // wiill take to the sign up page
+      >
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
     </View>

@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     justifyContent: "center",
@@ -14,6 +15,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: "#333",
   },
+  
+  logo: {
+    width: 300, 
+    height: 300,
+    marginBottom: 5
+  },
   input: {
     width: "100%",
     padding: 15,
@@ -22,7 +29,21 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
     borderRadius: 8,
     backgroundColor: "#fff",
-    color: "#333", // Visible text color
+    color: "#333", 
+  },
+  homeTitle: {
+    fontSize: 36,
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  homeSubtitle: {
+    fontSize: 18,
+    color: "#666",
+    textAlign: "center",
+    marginHorizontal: 20,
+    marginBottom: 20,
   },
   button: {
     width: "100%",
