@@ -32,7 +32,7 @@ export default function ProfileScreen() {
 
     fetchUserData();
   }, []);
-
+ //use edit profile endpoint here if available
   const handleEditProfile = () => {
     Alert.alert("Edit Profile", "Edit profile functionality coming soon!");
   };

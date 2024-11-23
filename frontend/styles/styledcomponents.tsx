@@ -35,9 +35,29 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
   },
+  // Specific styles for Login/Signup buttons
+  loginButton: {
+    backgroundColor: "green",
+  },
+  signupButton: {
+    backgroundColor: "green",
+  },
+  // Specific styles for Main Page buttons
+  walletButton: {
+    backgroundColor: "#4CAF50", // Green button for Wallet
+  },
+  profileButton: {
+    backgroundColor: "#2196F3", // Blue button for Profile
+  },
+  qrButton: {
+    backgroundColor: "#FF9800", // Orange button for QR Code
+  },
   errorText: {
     color: "red",
     marginBottom: 10,
+  },
+  activityIndicator: {
+    marginTop: 20,
   },
 });
 
