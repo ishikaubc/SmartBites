@@ -16,7 +16,7 @@ export default function QRScreen() {
         const storedUserId = await AsyncStorage.getItem("userId");
         const storedBalance = await AsyncStorage.getItem("balance");
 
-        // Simulated fallback for example purposes
+        // 
         setUserId(storedUserId || "exampleUserId");
         setBalance(storedBalance || 1000); // Fallback to 1000 points for testing
       } catch (error) {
@@ -37,7 +37,7 @@ export default function QRScreen() {
     );
   }
 
-  if (!userId || balance === null) {
+  if (!userId) {
     return (
       <View style={styles.container}>
         <Text style={styles.title}>Unable to generate QR code.</Text>
@@ -50,14 +50,13 @@ export default function QRScreen() {
 
   const qrData = {
     userId,
-    balance,
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Your QR Code</Text>
 
-      <View style={customStyles.qrContainer}>
+      <View style={styles.qrContainer}>
         <QRCode value={JSON.stringify(qrData)} size={200} />
       </View>
 
@@ -69,16 +68,3 @@ export default function QRScreen() {
   );
 }
 
-const customStyles = StyleSheet.create({
-  qrContainer: {
-    marginVertical: 20,
-    padding: 20,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    elevation: 5, // Shadow for Android
-    shadowColor: "#000", // Shadow for iOS
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-  },
-});

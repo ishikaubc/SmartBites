@@ -80,6 +80,17 @@ const styles = StyleSheet.create({
   activityIndicator: {
     marginTop: 20,
   },
+  qrContainer: {
+    marginVertical: 20,
+    padding: 20,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    elevation: 5, // Shadow for Android
+    shadowColor: "#000", // Shadow for iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },
 });
 
 export default styles;
