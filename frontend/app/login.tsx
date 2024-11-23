@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router"; 
+import { View, Text, TextInput, Alert, Button } from "react-native";
 import styles from "../styles/styledcomponents";
+import { login } from "../utils/action";
 
 export default function LoginScreen() {
   const router = useRouter(); 
@@ -76,9 +79,12 @@ export default function LoginScreen() {
         onChangeText={setPassword}
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Log In</Text>
-      </TouchableOpacity>
+      <Button
+        onPress={() => handleLogin}
+        title="Log In"
+        color="#11960c"
+        accessibilityLabel="Learn more about this purple button"
+      />
     </View>
   );
 }
