@@ -93,9 +93,15 @@ export default function MainPage() {
         <>
         <TouchableOpacity
             style={[styles.featureButton]}
-            onPress={() => router.push("/scan")} // Navigate to File Upload page
+            onPress={() => router.push("/scanbarcode")} // user scans the barcode
           >
             <Text style={styles.featureButtonText}>Scan Barcode</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.featureButton]}
+            onPress={() => router.push("/scanreceipt")} // user scans the receipt
+          >
+            <Text style={styles.featureButtonText}>Scan Receipt</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.featureButton]}
