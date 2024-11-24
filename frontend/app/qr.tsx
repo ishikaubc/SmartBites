@@ -16,22 +16,22 @@ import { fetchWalletData } from "../utils/action";
 
 export default function QRScreen() {
   const [userId, setUserId] = useState(null);
-  const [balance, setBalance] = useState(null);
+  const [balance, setBalance] = useState(0);
   const [userQRCode, setQRCode] = useState(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const walletData = async() => {
+      const storedUserId = await AsyncStorage.getItem("id");
+      const data = await fetchWalletData(storedUserId);
 
-      const walletData = async() => {
-        const storedUserId = await AsyncStorage.getItem("id");
-        const data = await fetchWalletData(storedUserId);
+      if(data.length > 0 ){
         setBalance(data[0].total_points)
-        setLoading(false)
       }
-  
-      walletData()
+      setLoading(false)
+    }
+    const fetchUserData = async () => {
 
       try {
         // Fetch user data from AsyncStorage
@@ -55,6 +55,7 @@ export default function QRScreen() {
     };
 
     fetchUserData();
+    walletData();
   }, []);
 
   if (loading) {
@@ -98,7 +99,7 @@ export default function QRScreen() {
       </Text>
 
       <Text style={{ marginTop: 20, fontSize: 14, color: "#555" }}>
-        Current Balance: {balance || "N/A"} points
+        Current Balance: {balance} points
       </Text>
     </View>
   );
