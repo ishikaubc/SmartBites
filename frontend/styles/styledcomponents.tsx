@@ -15,9 +15,12 @@ const styles = StyleSheet.create({
     color: "#333",
   },
 
+
   logo: {
     width: 300,
+    width: 300,
     height: 300,
+    marginBottom: 5,
     marginBottom: 5,
   },
   input: {
@@ -28,6 +31,7 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
     borderRadius: 8,
     backgroundColor: "#fff",
+    color: "#333",
     color: "#333",
   },
   homeTitle: {
@@ -50,6 +54,7 @@ const styles = StyleSheet.create({
     backgroundColor: "green", // Green button color
     borderRadius: 8,
     alignItems: "center",
+    margin: 6
   },
   buttonText: {
     color: "#fff",
@@ -72,8 +77,8 @@ const styles = StyleSheet.create({
   qrButton: {
     backgroundColor: "#FF9800", // Orange button for QR Code
   },
-  uploadButton: {
-    backgroundColor: "green", 
+  signoutButton: {
+    backgroundColor: "#FF0000", // Orange button for QR Code
   },
   errorText: {
     color: "red",

@@ -1,24 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ActivityIndicator, Alert } from "react-native";
-import QRCode from "react-native-qrcode-svg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../styles/styledcomponents";
+import QRCode from "react-qr-code";
 
 export default function QRScreen() {
   const [userId, setUserId] = useState(null);
   const [balance, setBalance] = useState(null);
+  const [userQRCode, setQRCode] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         // add the fetch user id logic here from the backemd
-        const storedUserId = await AsyncStorage.getItem("userId");
+        const storedUserId = await AsyncStorage.getItem("id");
         const storedBalance = await AsyncStorage.getItem("balance");
+        const userQRCode = await AsyncStorage.getItem("qrCode");
 
-        // 
-        setUserId(storedUserId || "exampleUserId");
+        // Simulated fallback for example purposes
+        setUserId(storedUserId || "default_userId");
         setBalance(storedBalance || 1000); // Fallback to 1000 points for testing
+        setQRCode(userQRCode || "default_qr");
       } catch (error) {
         Alert.alert("Error", "Failed to fetch user data.");
       } finally {
@@ -48,16 +51,12 @@ export default function QRScreen() {
     );
   }
 
-  const qrData = {
-    userId,
-  };
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Your QR Code</Text>
 
-      <View style={styles.qrContainer}>
-        <QRCode value={JSON.stringify(qrData)} size={200} />
+      <View style={customStyles.qrContainer}>
+        <QRCode size={200} value={userQRCode} />
       </View>
 
       <Text style={{ marginTop: 20, fontSize: 16, color: "#555" }}>
@@ -67,4 +66,3 @@ export default function QRScreen() {
     </View>
   );
 }
-
