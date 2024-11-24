@@ -28,7 +28,7 @@ export async function register(
   .eq('email', email)
 
   if(data){
-    createWallet(data[0].id)
+    createWallet(data[0].wallet_id, data[0].id)
   }else{
     console.log("Erro creating wallet")
   }
@@ -43,8 +43,6 @@ export async function register(
 }
 
 export async function login(email: string, password: string) {
-  const hashedPassword = hashSync(password, salt);
-  
   const { data, error } = await supabase
     .from("users")
     .select("*")
@@ -61,7 +59,7 @@ export async function login(email: string, password: string) {
     AsyncStorage.setItem("qrCode", data[0].qr_code);
     AsyncStorage.setItem("role", data[0].role);
   } else {
-    console.log("No user found !");
+    console.log("Invalid credentias/No user found !");
   }
 
   if (error) {
@@ -73,10 +71,11 @@ export async function login(email: string, password: string) {
 
 
 export async function createWallet(
-  id,
+  walletId,userId
 ) {
   const { error } = await supabase.from("wallet").insert({
-    user_id: id,
+    id: walletId,
+    user_id: userId,
     total_points: 0,
   });
 
