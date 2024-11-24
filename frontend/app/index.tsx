@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
-import { useRouter } from "expo-router"; // Use routing for navigation
+import { useRouter } from "expo-router";
 import styles from "../styles/styledcomponents";
 
 export default function Page() {
@@ -25,14 +25,15 @@ export default function Page() {
 
       <TouchableOpacity
         style={[styles.button, styles.signupButton]}
-        onPress={() => router.push("/login")} // wiill take to the sign up page
+        onPress={() => router.push("/login")}
       >
         <Text style={styles.buttonText}>Log In</Text>
       </TouchableOpacity>
+
       {/* Sign Up Button */}
       <TouchableOpacity
         style={[styles.button, styles.signupButton]}
-        onPress={() => router.push("/signup")} // wiill take to the sign up page
+        onPress={() => router.push("/signup")}
       >
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>

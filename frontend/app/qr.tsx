@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ActivityIndicator, Alert } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator, Alert, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../styles/styledcomponents";
 import QRCode from "react-qr-code";
+import { useRouter } from "expo-router";
 
 export default function QRScreen() {
   const [userId, setUserId] = useState(null);
   const [balance, setBalance] = useState(null);
   const [userQRCode, setQRCode] = useState(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -53,6 +55,13 @@ export default function QRScreen() {
 
   return (
     <View style={styles.container}>
+         {/* Back Button */}
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => router.back()} // Go back to the previous page
+      >
+        <Text style={styles.backButtonText}>← Back</Text>
+      </TouchableOpacity>
       <Text style={styles.title}>Your QR Code</Text>
 
       <View style={styles.qrContainer}>

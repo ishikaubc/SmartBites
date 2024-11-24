@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, Alert } from "react-native";
 import styles from "../styles/styledcomponents";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router"; 
 
 export default function VoucherScreen() {
   const [balance, setBalance] = useState(0);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -29,36 +31,47 @@ export default function VoucherScreen() {
 
   return (
     <View style={styles.container}>
+         <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => router.back()} // Go back to the previous page
+      >
+        <Text style={styles.backButtonText}>← Back</Text>
+      </TouchableOpacity>
+
       <Text style={styles.title}>Vouchers</Text>
       <Text style={{ marginBottom: 20 }}>Your Balance: {balance} Points</Text>
 
       <TouchableOpacity
-        style={[styles.button, styles.walletButton]}
-        onPress={() => handleRedeem(50, "25% off plant-based meal")}
-      >
-        <Text style={styles.buttonText}>50 Points - 25% off plant-based meal</Text>
-      </TouchableOpacity>
+  style={[styles.voucher, styles.voucherSmall]}
+  onPress={() => handleRedeem(50, "25% off plant-based meal")}
+>
+  <Text style={styles.voucherText}>50 Points</Text>
+  <Text style={styles.voucherSubText}>25% off plant-based meal</Text>
+</TouchableOpacity>
 
-      <TouchableOpacity
-        style={[styles.button, styles.walletButton]}
-        onPress={() => handleRedeem(100, "50% off plant-based meal")}
-      >
-        <Text style={styles.buttonText}>100 Points - 50% off plant-based meal</Text>
-      </TouchableOpacity>
+<TouchableOpacity
+  style={[styles.voucher, styles.voucherMedium]}
+  onPress={() => handleRedeem(100, "50% off plant-based meal")}
+>
+  <Text style={styles.voucherText}>100 Points</Text>
+  <Text style={styles.voucherSubText}>50% off plant-based meal</Text>
+</TouchableOpacity>
 
-      <TouchableOpacity
-        style={[styles.button, styles.walletButton]}
-        onPress={() => handleRedeem(200, "Free dessert with meal")}
-      >
-        <Text style={styles.buttonText}>200 Points - Free dessert</Text>
-      </TouchableOpacity>
+<TouchableOpacity
+  style={[styles.voucher, styles.voucherLarge]}
+  onPress={() => handleRedeem(200, "Free dessert with meal")}
+>
+  <Text style={styles.voucherText}>200 Points</Text>
+  <Text style={styles.voucherSubText}>Free dessert with meal</Text>
+</TouchableOpacity>
 
-      <TouchableOpacity
-        style={[styles.button, styles.walletButton]}
-        onPress={() => handleRedeem(500, "$5 off any meal")}
-      >
-        <Text style={styles.buttonText}>500 Points - $5 off any meal</Text>
-      </TouchableOpacity>
-    </View>
+<TouchableOpacity
+  style={[styles.voucher, styles.voucherExtraLarge]}
+  onPress={() => handleRedeem(500, "$5 off any meal")}
+>
+  <Text style={styles.voucherText}>500 Points</Text>
+  <Text style={styles.voucherSubText}>$5 off any meal</Text>
+</TouchableOpacity>
+</View>
   );
 }
