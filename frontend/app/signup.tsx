@@ -39,7 +39,7 @@ export default function SignupScreen() {
     setError("");
 
     try {
-      await register(firstName, lastName, email, password, role); // Pass the role
+      register(firstName, lastName, email, password, role).then((res) => console.log(res)); // Pass the role
       Alert.alert("Signup Successful!", "You can now log in.");
       router.push("/login");
     } catch (error) {
@@ -82,18 +82,6 @@ export default function SignupScreen() {
         value={password}
         onChangeText={setPassword}
       />
-
-      {/* Dropdown for Role Selection */}
-      <View style={styles.input}>
-        <Picker
-          selectedValue={role}
-          onValueChange={(itemValue) => setRole(itemValue)}
-          style={{ width: "100%", color: "#333" }} 
-        >
-          <Picker.Item label="Student" value="student" />
-          <Picker.Item label="Cashier" value="cashier" />
-        </Picker>
-      </View>
 
       <Button
         onPress={handleSignup}

@@ -28,7 +28,9 @@ export async function register(
 }
 
 export async function login(email: string, password: string) {
+  const userId = uuid
   const hashedPassword = hashSync(password, salt);
+
   const { data, error } = await supabase
     .from("users")
     .select("*")
@@ -53,4 +55,25 @@ export async function login(email: string, password: string) {
   }
 
   return data;
+}
+
+
+export async function createWallet(
+  id: int,
+) {
+  const { error } = await supabase.from("users").insert({
+    user_id: id,
+    total_points: 0,
+  });
+
+  if (error) {
+    console.log(error);
+  }
+}
+
+export async function fetchWalletData(id: int){
+  const { data, error } = await supabase
+  .from("wallet")
+  .select("*")
+  .eq("user_id", id);
 }
