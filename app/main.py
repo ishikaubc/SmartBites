@@ -76,7 +76,7 @@ async def calc_pts(file: UploadFile = File(...)):
             },
             files={'file': ('receipt.jpg', file_content, file.content_type)} 
         )
-
+        print(res)
         if res.status_code != 200:
             raise HTTPException(
                 status_code=res.status_code,

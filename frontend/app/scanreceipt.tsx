@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+import * as FileSystem from "expo-file-system";
 import {
   View,
   Text,
@@ -10,13 +12,14 @@ import {
 import { Camera, CameraView } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 
-const API_URL = "http://your-api-url/receipt_calc"; // Replace with your backend API
+const API_URL = "http://localhost:8000/receipt_calc"; // Replace with your backend API
 
 export default function ScanReceiptPage() {
     const [hasCameraPermission, setHasCameraPermission] = useState(null); // Camera permission state
     const [cameraRef, setCameraRef] = useState(null); // Camera reference
     const [uploading, setUploading] = useState(false); // Upload state
     const [cameraOn, setCameraOn] = useState(false); // Camera toggle state
+    const [imageAsset, setImageAsset] = useState(null); // Store selected ImagePicker
   
     // Request camera permissions when the component mounts
     useEffect(() => {
@@ -52,46 +55,32 @@ export default function ScanReceiptPage() {
   
     // Function to upload the receipt image
     const handleUploadReceipt = async (imageUri) => {
-      const formData = new FormData();
-      formData.append("file", {
-        uri: imageUri, // Image URI
-        name: "receipt.jpg", // File name (can be dynamic)
-        type: "image/jpeg", // MIME type
-      });
-  
       try {
-        setUploading(true); // Start uploading indicator
-  
-        const response = await fetch(API_URL, {
+        const response = await fetch(imageUri); // Fetch the image data
+        const blob = await response.blob(); // Convert the image into a Blob
+    
+        const formData = new FormData();
+        formData.append("file", blob, "receipt.jpg"); // Append Blob with a filename
+    
+        console.log("FormData:", formData);
+    
+        const result = await fetch(API_URL, {
           method: "POST",
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          body: formData, // FormData payload
+          body: formData, // Send FormData
         });
-  
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status}`);
+    
+        if (!result.ok) {
+          throw new Error(`Error: ${result.status}`);
         }
-  
-        const data = await response.json(); // Parse the backend response
-  
-        // Display success message with points
-        if (data.Total_Points) {
-          Alert.alert("Success", `You earned ${data.Total_Points} points!`);
-        } else {
-          Alert.alert(
-            "Success",
-            "Receipt processed successfully, but no points awarded."
-          );
-        }
+    
+        const data = await result.json();
+        Alert.alert("Success", `You earned ${data.Points} points!`);
       } catch (error) {
         console.error("Error uploading receipt:", error);
         Alert.alert("Error", "Failed to process receipt. Please try again.");
-      } finally {
-        setUploading(false); // Stop uploading indicator
       }
     };
+  
 
   return (
     <View style={styles.container}>
