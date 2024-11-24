@@ -1,7 +1,7 @@
 import { supabase } from "../utils/supabase";
 import { genSaltSync, hashSync, compareSync } from "bcrypt-ts";
 import { v4 as uuidv4 } from "uuid";
-import { pathArg } from "./../node_modules/supabase/node_modules/mkdirp/dist/mjs/path-arg";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const salt = genSaltSync(10);
 
@@ -27,10 +27,24 @@ export async function register(
 }
 
 export async function login(email: string, password: string) {
+  const hashedPassword = hashSync(password, salt);
   const { data, error } = await supabase
     .from("users")
     .select("*")
-    .match({ email: email, password: hashSync(password, salt) });
+    .eq("email", email.trim());
+
+  if (data) {
+    AsyncStorage.setItem("id", data[0].id);
+    AsyncStorage.setItem("authToken", uuidv4());
+    AsyncStorage.setItem("email", data[0].email);
+    AsyncStorage.setItem("firstName", data[0].first_name);
+    AsyncStorage.setItem("lastName", data[0].last_name);
+    AsyncStorage.setItem("walletId", data[0].wallet_id);
+    AsyncStorage.setItem("orderHistoryId", data[0].order_history_id);
+    AsyncStorage.setItem("qrCode", data[0].qr_code);
+  } else {
+    console.log("No user found !");
+  }
 
   if (error) {
     console.log(error);

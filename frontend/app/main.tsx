@@ -9,10 +9,15 @@ export default function MainPage() {
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState("");
 
+  const handleSignOut = async () => {
+    await AsyncStorage.clear();
+    router.push("/login");
+  };
+
   useEffect(() => {
     const fetchUserData = async () => {
       const token = await AsyncStorage.getItem("authToken"); //store the auth token in the local storage
-      const storedUserId = await AsyncStorage.getItem("userId"); //store the user id 
+      const storedUserId = await AsyncStorage.getItem("id"); //store the user id
 
       if (!token || !storedUserId) {
         router.replace("/login"); // Redirect to Login if not authenticated
@@ -24,7 +29,7 @@ export default function MainPage() {
     };
 
     fetchUserData();
-  }, []); 
+  }, []);
 
   if (loading) {
     return (
@@ -57,6 +62,12 @@ export default function MainPage() {
         onPress={() => router.push("/qr")} //takes to QR page
       >
         <Text style={styles.buttonText}>Generate QR Code</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.button, styles.signoutButton]}
+        onPress={handleSignOut} //Signs out user
+      >
+        <Text style={styles.buttonText}>Sign Out</Text>
       </TouchableOpacity>
     </View>
   );

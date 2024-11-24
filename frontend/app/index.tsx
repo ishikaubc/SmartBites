@@ -4,7 +4,7 @@ import { useRouter } from "expo-router"; // Use routing for navigation
 import styles from "../styles/styledcomponents";
 
 export default function Page() {
-  const router = useRouter(); 
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
@@ -23,6 +23,12 @@ export default function Page() {
         Your smart companion for meal tracking and rewards.
       </Text>
 
+      <TouchableOpacity
+        style={[styles.button, styles.signupButton]}
+        onPress={() => router.push("/login")} // wiill take to the sign up page
+      >
+        <Text style={styles.buttonText}>Log In</Text>
+      </TouchableOpacity>
       {/* Sign Up Button */}
       <TouchableOpacity
         style={[styles.button, styles.signupButton]}
