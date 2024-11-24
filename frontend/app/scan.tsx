@@ -9,6 +9,7 @@ import {
 import { Camera, CameraView, CameraType } from "expo-camera"; // Barcode Scanner
 import * as ImagePicker from "expo-image-picker"; // For receipt upload
 import styles from "../styles/styledcomponents";
+import { fetchUserInfo } from "../utils/action";
 
 export default function ScanBarcodePage() {
   const [hasPermission, setHasPermission] = useState(null); // to store the camera permission state
@@ -30,14 +31,30 @@ export default function ScanBarcodePage() {
   }, []);
 
   const handleBarCodeScanned = async ({ data }) => {
-    setScanned(true);
-
+    setScanned(true); 
+  
     try {
-      // Assume barcode contains userId
-      const fetchedUserId = data; // need API to fetch user information
-      setUserId(fetchedUserId);
-
-      Alert.alert("Barcode Scanned!", `User ID: ${fetchedUserId}`);
+      //barcode contains userId
+      const fetchedUserId = data;
+  
+      // Fetch user info from Supabase
+      const userInfo = await fetchUserInfo(fetchedUserId);
+  
+      if (userInfo && userInfo.length > 0) {
+        const user = userInfo[0]; 
+        setUserId(fetchedUserId);
+  
+        // Display user details
+        Alert.alert(
+          "Barcode Scanned!",
+          `User ID: ${fetchedUserId}\nWallet Points: ${user.points || 0}`
+        );
+      } else {
+        Alert.alert(
+          "User Not Found",
+          `No user found in the wallet with ID: ${fetchedUserId}`
+        );
+      }
     } catch (error) {
       Alert.alert("Error", "Failed to fetch user details.");
     }
@@ -47,36 +64,66 @@ export default function ScanBarcodePage() {
     setType((current) => (current === "back" ? "front" : "back"));
   };
 
+  
+{/*to send the image to backend to calculate points */}
+  const API_URL = "http://your-api-url/receipt_calc";
+
   const handleUploadReceipt = async () => {
     try {
+      // Open image picker
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
       });
-
+  
       if (!result.canceled) {
-        setUploading(true);
-
-        setTimeout(async () => {
-          // Example backend request
-          const pointsEarned = 5; // user earns 5 points per $5 purchase
-
-          // Send API request to update wallet points
-          await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate delay
+        setUploading(true); 
+  
+        const imageUri = result.assets[0].uri; // Get the selected image URI
+  
+        
+        const formData = new FormData();
+        formData.append("file", {
+          uri: imageUri,
+          name: "receipt.jpg", 
+          type: "image/jpeg",  
+        });
+  
+        try {
+          // Send image to backend
+          const response = await fetch(API_URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            body: formData,
+          });
+  
+          if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+          }
+  
+          const data = await response.json(); // Get the points from the response
+          const pointsEarned = data.Points;
+  
+          // Display success alert
           Alert.alert(
             "Success",
             `Receipt validated. ${pointsEarned} points added to user ${userId}'s wallet!`
           );
-
-          setUploading(false);
-        }, 1000);
+        } catch (error) {
+          Alert.alert("Error", "Failed to process receipt. Please try again.");
+        } finally {
+          setUploading(false); // Reset uploading state
+        }
       }
     } catch (error) {
       Alert.alert("Error", "Failed to upload receipt. Please try again.");
     }
   };
+ 
 
   if (hasPermission === null) {
     return (
