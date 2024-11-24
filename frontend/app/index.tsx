@@ -1,34 +1,42 @@
-import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { View, Text, Image, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
+import styles from "../styles/styledcomponents";
 
 export default function Page() {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
-      <View style={styles.main}>
-        <Text style={styles.title}>Hello World</Text>
-        <Text style={styles.subtitle}>This is the first page of your app.</Text>
-      </View>
+      {/* Logo */}
+      <Image
+        source={require("../assets/images/smartbites-2-removebg-preview.png")}
+        style={styles.logo}
+        resizeMode="contain"
+      />
+
+      {/* Title */}
+      <Text style={styles.homeTitle}>Welcome to SmartBites</Text>
+
+      {/* Subtitle */}
+      <Text style={styles.homeSubtitle}>
+        Your smart companion for meal tracking and rewards.
+      </Text>
+
+      <TouchableOpacity
+        style={[styles.button, styles.signupButton]}
+        onPress={() => router.push("/login")}
+      >
+        <Text style={styles.buttonText}>Log In</Text>
+      </TouchableOpacity>
+
+      {/* Sign Up Button */}
+      <TouchableOpacity
+        style={[styles.button, styles.signupButton]}
+        onPress={() => router.push("/signup")}
+      >
+        <Text style={styles.buttonText}>Sign Up</Text>
+      </TouchableOpacity>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    padding: 24,
-  },
-  main: {
-    flex: 1,
-    justifyContent: "center",
-    maxWidth: 960,
-    marginHorizontal: "auto",
-  },
-  title: {
-    fontSize: 64,
-    fontWeight: "bold",
-  },
-  subtitle: {
-    fontSize: 36,
-    color: "#38434D",
-  },
-});
