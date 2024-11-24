@@ -18,7 +18,14 @@ export default function WalletScreen() {
   const router = useRouter(); // Navigation hook
 
   useEffect(() => {
-    console.log("Wallet")
+    const walletData = async() => {
+      const storedUserId = await AsyncStorage.getItem("id");
+      const data = await fetchWalletData(storedUserId);
+      setBalance(data[0].total_points)
+      setLoading(false)
+    }
+
+    walletData()
   }, []);
 
   const handleRedeemPoints = async () => {
