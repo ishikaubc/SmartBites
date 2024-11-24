@@ -1,16 +1,9 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-  Button,
-} from "react-native";
+import { View, Text, TextInput, Alert, Button } from "react-native";
+import { Picker } from "@react-native-picker/picker"; // Import Picker for dropdown
 import styles from "../styles/styledcomponents";
 import { useRouter } from "expo-router";
 import { register } from "../utils/action";
-import { hashSync } from "bcrypt-ts";
 
 export default function SignupScreen() {
   const router = useRouter();
@@ -19,6 +12,7 @@ export default function SignupScreen() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("student"); // Default role
   const [error, setError] = useState("");
 
   const validateEmail = (email: string) => {
@@ -26,8 +20,8 @@ export default function SignupScreen() {
     return re.test(String(email).toLowerCase());
   };
 
-  const handleSignup = () => {
-    if (!firstName || !lastName || !email || !password) {
+  const handleSignup = async () => {
+    if (!firstName || !lastName || !email || !password || !role) {
       setError("All fields are required.");
       return;
     }
@@ -42,10 +36,14 @@ export default function SignupScreen() {
       return;
     }
 
-    if (error.length == 0) {
-      register(firstName, lastName, email, password);
-      router.push("/login");
+    setError("");
+
+    try {
+      await register(firstName, lastName, email, password, role); // Pass the role
       Alert.alert("Signup Successful!", "You can now log in.");
+      router.push("/login");
+    } catch (error) {
+      Alert.alert("Error", "Signup failed. Please try again.");
     }
   };
 
@@ -84,11 +82,24 @@ export default function SignupScreen() {
         value={password}
         onChangeText={setPassword}
       />
+
+      {/* Dropdown for Role Selection */}
+      <View style={styles.input}>
+        <Picker
+          selectedValue={role}
+          onValueChange={(itemValue) => setRole(itemValue)}
+          style={{ width: "100%", color: "#333" }} 
+        >
+          <Picker.Item label="Student" value="student" />
+          <Picker.Item label="Cashier" value="cashier" />
+        </Picker>
+      </View>
+
       <Button
         onPress={handleSignup}
         title="Sign Up"
         color="#11960c"
-        accessibilityLabel="Learn more about this purple button"
+        accessibilityLabel="Sign up for an account"
       />
     </View>
   );

@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router"; 
 import { View, Text, TextInput, Alert, Button } from "react-native";
 import styles from "../styles/styledcomponents";
-import { login } from "../utils/action";
+import { login } from "../utils/action"; 
 
 export default function LoginScreen() {
   const router = useRouter(); 
@@ -23,39 +21,35 @@ export default function LoginScreen() {
       setError("Email and password are required.");
       return;
     }
-
+  
     if (!validateEmail(email)) {
       setError("Please enter a valid email address.");
       return;
     }
-
+  
     try {
-      // we will replace the actual backend logic here to validate the user credentials and get the user token
-      const response = await new Promise((resolve, reject) =>
-        setTimeout(() => {
-          if (email === "test@example.com" && password === "password") {
-            resolve({ token: "12345", userId: "user123" }); // Mock token and user ID
-          } else {
-            reject("Invalid credentials");
-          }
-        }, 1000)
-      );
-
-      // Simulated response
-      const { token, userId } = response as { token: string; userId: string };
-
-      // store token and user id during login
-      await AsyncStorage.setItem("authToken", token);
-      await AsyncStorage.setItem("userId", userId);
-
-      Alert.alert("Login Successful!", `Welcome back, ${email}!`);
-
-      // user will be directed to the main page on successful login
-      router.push("/main");
+      // Call Supabase login function
+      const data = await login(email, password);
+  
+      if (data && data.length > 0) {
+        const user = data[0];
+  
+        // Save token, user ID, and role in AsyncStorage
+        await AsyncStorage.setItem("authToken", "dummyAuthToken");
+        await AsyncStorage.setItem("userId", user.id);
+        await AsyncStorage.setItem("role", user.role); 
+        Alert.alert("Login Successful!", `Welcome back, ${user.first_name}!`);
+  
+        // Redirect to the main page
+        router.push("/main");
+      } else {
+        throw new Error("Invalid email or password.");
+      }
     } catch (err) {
       setError("Invalid email or password.");
     }
   };
+  
 
   return (
     <View style={styles.container}>
@@ -80,10 +74,10 @@ export default function LoginScreen() {
       />
 
       <Button
-        onPress={() => handleLogin}
+        onPress={handleLogin}
         title="Log In"
         color="#11960c"
-        accessibilityLabel="Learn more about this purple button"
+        accessibilityLabel="Log in to access your account"
       />
     </View>
   );

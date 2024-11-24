@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, Text, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import styles from "../styles/styledcomponents";
@@ -8,23 +8,30 @@ export default function MainPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState("");
+  const [role, setRole] = useState(""); // State to store the user's role
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const token = await AsyncStorage.getItem("authToken"); //store the auth token in the local storage
-      const storedUserId = await AsyncStorage.getItem("userId"); //store the user id 
+      try {
+        const token = await AsyncStorage.getItem("authToken"); // Retrieve the auth token
+        const storedUserId = await AsyncStorage.getItem("userId"); // Retrieve the user ID
+        const storedRole = await AsyncStorage.getItem("role"); // Retrieve the role
 
-      if (!token || !storedUserId) {
-        router.replace("/login"); // Redirect to Login if not authenticated
-      } else {
-        setUserId(storedUserId);
+        if (!token || !storedUserId || !storedRole) {
+          router.replace("/login"); // Redirect to Login if not authenticated
+        } else {
+          setUserId(storedUserId);
+          setRole(storedRole);
+        }
+      } catch (error) {
+        Alert.alert("Error", "Failed to load user data.");
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     };
 
     fetchUserData();
-  }, []); 
+  }, []);
 
   if (loading) {
     return (
@@ -37,27 +44,54 @@ export default function MainPage() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome, {userId}!</Text>
+      <Text style={styles.subtitle}>
+        Role: {role.charAt(0).toUpperCase() + role.slice(1)}
+      </Text>
 
-      <TouchableOpacity
-        style={[styles.button, styles.walletButton]}
-        onPress={() => router.push("/wallet")} //takes to wallet page
-      >
-        <Text style={styles.buttonText}>View Wallet</Text>
-      </TouchableOpacity>
+     {/* students will have option to view their wallet, view their profile and generate QR */}
+      {role === "student" && (
+        <>
+          <TouchableOpacity
+            style={[styles.button, styles.walletButton]}
+            onPress={() => router.push("/wallet")} // Navigate to Wallet page
+          >
+            <Text style={styles.buttonText}>View Wallet</Text>
+          </TouchableOpacity>
 
-      <TouchableOpacity
-        style={[styles.button, styles.profileButton]}
-        onPress={() => router.push("/profile")} //takes to profile page
-      >
-        <Text style={styles.buttonText}>View Profile</Text>
-      </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, styles.profileButton]}
+            onPress={() => router.push("/profile")} // Navigate to Profile page
+          >
+            <Text style={styles.buttonText}>View Profile</Text>
+          </TouchableOpacity>
 
-      <TouchableOpacity
-        style={[styles.button, styles.qrButton]}
-        onPress={() => router.push("/qr")} //takes to QR page
-      >
-        <Text style={styles.buttonText}>Generate QR Code</Text>
-      </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, styles.qrButton]}
+            onPress={() => router.push("/qr")} // Navigate to QR page
+          >
+            <Text style={styles.buttonText}>Generate QR Code</Text>
+          </TouchableOpacity>
+        </>
+      )}
+
+      {/* Options for Cashiers */}
+      {role === "cashier" && (
+        <>
+          <TouchableOpacity
+            style={[styles.button, styles.uploadButton]}
+            onPress={() => router.push("/upload")} // Navigate to File Upload page
+          >
+            <Text style={styles.buttonText}>Upload Scan File</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.button, styles.profileButton]}
+            onPress={() => router.push("/profile")} // Navigate to Profile page
+          >
+            <Text style={styles.buttonText}>View Profile</Text>
+          </TouchableOpacity>
+        </>
+      )}
     </View>
   );
 }
