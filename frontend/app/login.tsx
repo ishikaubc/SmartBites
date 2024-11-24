@@ -34,9 +34,7 @@ export default function LoginScreen() {
     try {
       // Call Supabase login function
       const data = await login(email, password);
-      console.log(data);
       if (data && data.length > 0) {
-        console.log(data);
         router.push("/main");
       } else {
         throw new Error("Invalid email or password.");

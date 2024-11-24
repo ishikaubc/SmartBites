@@ -9,6 +9,7 @@ import {
 import styles from "../styles/styledcomponents";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router"; // For navigation
+import { fetchWalletData } from "../utils/action";
 
 export default function WalletScreen() {
   const [points, setPoints] = useState(0); // Total points earned
@@ -17,22 +18,7 @@ export default function WalletScreen() {
   const router = useRouter(); // Navigation hook
 
   useEffect(() => {
-    const fetchWalletData = async () => {
-      try {
-        // Fetch wallet data from AsyncStorage or API
-        const userPoints = await AsyncStorage.getItem("userPoints");
-        const userBalance = await AsyncStorage.getItem("userBalance");
-
-        setPoints(userPoints ? parseInt(userPoints) : 1500); // Default: 1500 points
-        setBalance(userBalance ? parseInt(userBalance) : 1000); // Default: 1000 points
-      } catch (error) {
-        Alert.alert("Error", "Failed to load wallet data.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchWalletData();
+    console.log("Wallet")
   }, []);
 
   const handleRedeemPoints = async () => {

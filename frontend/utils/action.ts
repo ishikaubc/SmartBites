@@ -21,21 +21,34 @@ export async function register(
     password: hashSync(password, salt),
     role: "student",
   });
+  
+  const { data, error: selectError } = await supabase
+  .from('users')
+  .select("*")
+  .eq('email', email)
 
+  if(data){
+    createWallet(data[0].wallet_id, data[0].id)
+  }else{
+    console.log("Erro creating wallet")
+  }
+
+  if (selectError) {
+    console.log(selectError);
+  }
+  
   if (error) {
     console.log(error);
   }
 }
 
 export async function login(email: string, password: string) {
-  const hashedPassword = hashSync(password, salt);
-  
   const { data, error } = await supabase
     .from("users")
     .select("*")
-    .eq("email", email.trim());
+    .match({ email: email.trim(), password: hashSync(password, salt) })
 
-  if (data) {
+  if (data && data.length > 0) {
     AsyncStorage.setItem("id", data[0].id);
     AsyncStorage.setItem("authToken", uuidv4());
     AsyncStorage.setItem("email", data[0].email);
@@ -46,7 +59,7 @@ export async function login(email: string, password: string) {
     AsyncStorage.setItem("qrCode", data[0].qr_code);
     AsyncStorage.setItem("role", data[0].role);
   } else {
-    console.log("No user found !");
+    console.log("Invalid credentias/No user found !");
   }
 
   if (error) {
@@ -58,10 +71,11 @@ export async function login(email: string, password: string) {
 
 
 export async function createWallet(
-  id: int,
+  walletId,userId
 ) {
-  const { error } = await supabase.from("users").insert({
-    user_id: id,
+  const { error } = await supabase.from("wallet").insert({
+    id: walletId,
+    user_id: userId,
     total_points: 0,
   });
 
@@ -70,9 +84,16 @@ export async function createWallet(
   }
 }
 
-export async function fetchWalletData(id: int){
+export async function fetchWalletData(id){
   const { data, error } = await supabase
   .from("wallet")
   .select("*")
   .eq("user_id", id);
+
+  if(data){
+    AsyncStorage.setItem("totalPoints", data[0].total_points);
+  }
+  if(error){
+    console.log(data)
+  }
 }

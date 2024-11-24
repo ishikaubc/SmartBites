@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Alert, TouchableOpacity } from "react-native";
-import { Picker } from "@react-native-picker/picker"; // Import Picker for dropdown
+import { View, Text, TextInput, Alert, TouchableOpacity, Button } from "react-native"; // Import Picker for dropdown
 import styles from "../styles/styledcomponents";
 import { useRouter } from "expo-router";
 import { register } from "../utils/action";
-
 export default function SignupScreen() {
   const router = useRouter();
 
@@ -20,7 +18,7 @@ export default function SignupScreen() {
     return re.test(String(email).toLowerCase());
   };
 
-  const handleSignup = async () => {
+  const handleSignup = () => {
     if (!firstName || !lastName || !email || !password || !role) {
       setError("All fields are required.");
       return;
@@ -36,15 +34,13 @@ export default function SignupScreen() {
       return;
     }
 
-    setError("");
-
-    try {
-      await register(firstName, lastName, email, password, role); // Pass the role
-      Alert.alert("Signup Successful!", "You can now log in.");
+    if(error.length == 0){
+      register(firstName, lastName, email, password);
       router.push("/login");
-    } catch (error) {
-      Alert.alert("Error", "Signup failed. Please try again.");
+      Alert.alert("Sign in successful !");
+      setError("");
     }
+
   };
 
   return (
@@ -82,12 +78,12 @@ export default function SignupScreen() {
         value={password}
         onChangeText={setPassword}
       />
-
+      
       <TouchableOpacity
         style={[styles.button, styles.loginButton]}
         onPress={handleSignup}
       >
-        <Text style={styles.buttonText}>Sign In</Text>
+        <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
     </View>
   );
