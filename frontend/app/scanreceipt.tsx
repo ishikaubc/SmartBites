@@ -21,10 +21,13 @@ export default function ScanReceiptPage() {
   // Request permissions for camera and gallery on component mount
   useEffect(() => {
     (async () => {
-      const { status: cameraStatus } = await Camera.requestCameraPermissionsAsync();
+      const { status: cameraStatus } =
+        await Camera.requestCameraPermissionsAsync();
       const { status: galleryStatus } =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
-      setHasPermission(cameraStatus === "granted" && galleryStatus === "granted");
+      setHasPermission(
+        cameraStatus === "granted" && galleryStatus === "granted"
+      );
     })();
   }, []);
 
@@ -38,7 +41,7 @@ export default function ScanReceiptPage() {
     });
 
     try {
-      setUploading(true); // Start uploading indicator
+      setUploading(true);
       const response = await fetch(API_URL, {
         method: "POST",
         headers: {
@@ -54,30 +57,41 @@ export default function ScanReceiptPage() {
       const data = await response.json();
       Alert.alert(
         "Success",
-        `Receipt validated. You earned ${data.Points} points!`
+        `Receipt validated. You earned ${data.Total_Points} points!`
       );
     } catch (error) {
       Alert.alert("Error", "Failed to process receipt. Please try again.");
     } finally {
-      setUploading(false); // Stop uploading indicator
+      setUploading(false);
     }
   };
 
   // Capture receipt using the camera
   const handleCaptureReceipt = async () => {
     try {
+      // Check camera permission before launching
+      const { status } = await Camera.getCameraPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert(
+          "Permission Required",
+          "Camera permission is required to capture receipts. Please enable it in settings."
+        );
+        return;
+      }
+
       const result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images, // Allow only images
+        allowsEditing: true, // Allow editing the image before uploading
+        aspect: [4, 3], // Set aspect ratio
+        quality: 1, // Set image quality
       });
 
       if (!result.canceled) {
-        setScannedImage(result.assets[0].uri); // Store image URI
-        handleUploadReceipt(result.assets[0].uri); // Upload the image
+        setScannedImage(result.assets[0].uri); // Store the image URI
+        await handleUploadReceipt(result.assets[0].uri); // Upload the captured image
       }
     } catch (error) {
+      console.error("Error capturing receipt:", error);
       Alert.alert("Error", "Failed to capture receipt. Please try again.");
     }
   };
