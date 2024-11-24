@@ -19,7 +19,7 @@ export async function register(
     qr_code: uuidv4(),
     order_history_id: hashSync(password, salt).substring(0, 15),
     password: hashSync(password, salt),
-    role: "user",
+    role: "student",
   });
 
   if (error) {
@@ -43,6 +43,7 @@ export async function login(email: string, password: string) {
     AsyncStorage.setItem("walletId", data[0].wallet_id);
     AsyncStorage.setItem("orderHistoryId", data[0].order_history_id);
     AsyncStorage.setItem("qrCode", data[0].qr_code);
+    AsyncStorage.setItem("role", data[0].role);
   } else {
     console.log("No user found !");
   }

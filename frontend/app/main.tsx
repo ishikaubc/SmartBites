@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+  Alert,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import styles from "../styles/styledcomponents";
@@ -8,6 +14,7 @@ export default function MainPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState("");
+  const [role, setRole] = useState("user");
 
   const handleSignOut = async () => {
     await AsyncStorage.clear();
@@ -18,7 +25,7 @@ export default function MainPage() {
     const fetchUserData = async () => {
       try {
         const token = await AsyncStorage.getItem("authToken"); // Retrieve the auth token
-        const storedUserId = await AsyncStorage.getItem("userId"); // Retrieve the user ID
+        const storedUserId = await AsyncStorage.getItem("id"); // Retrieve the user ID
         const storedRole = await AsyncStorage.getItem("role"); // Retrieve the role
 
         if (!token || !storedUserId || !storedRole) {
@@ -52,7 +59,7 @@ export default function MainPage() {
         Role: {role.charAt(0).toUpperCase() + role.slice(1)}
       </Text>
 
-     {/* students will have option to view their wallet, view their profile and generate QR */}
+      {/* students will have option to view their wallet, view their profile and generate QR */}
       {role === "student" && (
         <>
           <TouchableOpacity
