@@ -48,7 +48,7 @@ export default function WalletScreen() {
     }
   };
 
- if (loading) {
+  if (loading) {
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large" color="#4CAF50" />
@@ -66,21 +66,19 @@ export default function WalletScreen() {
       >
         <Text style={styles.backButtonText}>← Back</Text>
       </TouchableOpacity>
-  
+
       {/* Wallet Info */}
       <Text style={styles.title}>Wallet</Text>
       <Text style={{ fontSize: 18, marginBottom: 10 }}>
-        Total Points Earned: <Text style={{ fontWeight: "bold" }}>{points}</Text>
+        Total Points Earned:{" "}
+        <Text style={{ fontWeight: "bold" }}>{points}</Text>
       </Text>
       <Text style={{ fontSize: 18, marginBottom: 20 }}>
         Current Balance: <Text style={{ fontWeight: "bold" }}>{balance}</Text>
       </Text>
-  
+
       {/* Redeem Points Button */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleRedeemPoints}
-      >
+      <TouchableOpacity style={styles.button} onPress={handleRedeemPoints}>
         <Text style={styles.buttonText}>Redeem Points</Text>
       </TouchableOpacity>
     </View>

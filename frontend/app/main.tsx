@@ -91,6 +91,12 @@ export default function MainPage() {
       {/* Options for Cashiers */}
       {role === "cashier" && (
         <>
+        <TouchableOpacity
+            style={[styles.featureButton]}
+            onPress={() => router.push("/scan")} // Navigate to File Upload page
+          >
+            <Text style={styles.featureButtonText}>Scan Barcode</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={[styles.featureButton]}
             onPress={() => router.push("/upload")} // Navigate to File Upload page

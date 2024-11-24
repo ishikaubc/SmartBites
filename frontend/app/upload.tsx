@@ -8,10 +8,12 @@ import {
 } from "react-native";
 import * as DocumentPicker from "expo-document-picker";
 import styles from "../styles/styledcomponents";
+import { useRouter } from "expo-router"; 
 
 export default function UploadScanFileScreen() {
   const [file, setFile] = useState<DocumentPicker.DocumentPickerSuccessResult | null>(null); 
   const [loading, setLoading] = useState(false); 
+  const router = useRouter();
 
   // Function to pick a file
   const handlePickFile = async () => {
@@ -59,6 +61,12 @@ export default function UploadScanFileScreen() {
 
   return (
     <View style={styles.container}>
+          <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => router.back()} // Go back to the previous page
+      >
+        <Text style={styles.backButtonText}>← Back</Text>
+      </TouchableOpacity>
       <Text style={styles.title}>Upload Scan File</Text>
 
       {/* File Info */}
@@ -75,7 +83,7 @@ export default function UploadScanFileScreen() {
         style={[styles.button, styles.button]}
         onPress={handlePickFile}
       >
-        <Text style={styles.buttonText}>Pick a File</Text>
+        <Text style={styles.buttonText}>Select a File</Text>
       </TouchableOpacity>
 
       {/* Upload File Button */}
