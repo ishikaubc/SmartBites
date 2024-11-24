@@ -34,7 +34,7 @@ export default function ScanBarcodePage() {
 
     try {
       // Assume barcode contains userId
-      const fetchedUserId = data; // need API to fetch user information
+      const fetchedUserId = data; // fetchuserinfo
       setUserId(fetchedUserId);
 
       Alert.alert("Barcode Scanned!", `User ID: ${fetchedUserId}`);
@@ -46,7 +46,7 @@ export default function ScanBarcodePage() {
   const toggleCameraFacing = () => {
     setType((current) => (current === "back" ? "front" : "back"));
   };
-
+ {/* enable the user to send the image and hit the backend calculate points */}
   const handleUploadReceipt = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
@@ -63,7 +63,7 @@ export default function ScanBarcodePage() {
           // Example backend request
           const pointsEarned = 5; // user earns 5 points per $5 purchase
 
-          // Send API request to update wallet points
+          // Send API request to calculating the points from the image
           await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate delay
           Alert.alert(
             "Success",
