@@ -21,26 +21,26 @@ export default function LoginScreen() {
       setError("Email and password are required.");
       return;
     }
-
+  
     if (!validateEmail(email)) {
       setError("Please enter a valid email address.");
       return;
     }
-
+  
     try {
-      //  Supabase login function
+      // Call Supabase login function
       const data = await login(email, password);
-
+  
       if (data && data.length > 0) {
-        const user = data[0]; 
-
-        // Save token and user data in AsyncStorage
-        await AsyncStorage.setItem("authToken", "dummyAuthToken"); 
+        const user = data[0];
+  
+        // Save token, user ID, and role in AsyncStorage
+        await AsyncStorage.setItem("authToken", "dummyAuthToken");
         await AsyncStorage.setItem("userId", user.id);
-
+        await AsyncStorage.setItem("role", user.role); 
         Alert.alert("Login Successful!", `Welcome back, ${user.first_name}!`);
-
-        // Navigate to the main page
+  
+        // Redirect to the main page
         router.push("/main");
       } else {
         throw new Error("Invalid email or password.");
@@ -49,6 +49,7 @@ export default function LoginScreen() {
       setError("Invalid email or password.");
     }
   };
+  
 
   return (
     <View style={styles.container}>
@@ -73,7 +74,7 @@ export default function LoginScreen() {
       />
 
       <Button
-        onPress={handleLogin} // Updated to call the handleLogin function
+        onPress={handleLogin}
         title="Log In"
         color="#11960c"
         accessibilityLabel="Log in to access your account"

@@ -1,7 +1,6 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
     justifyContent: "center",
@@ -15,11 +14,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: "#333",
   },
-  
+
   logo: {
-    width: 300, 
+    width: 300,
     height: 300,
-    marginBottom: 5
+    marginBottom: 5,
   },
   input: {
     width: "100%",
@@ -29,7 +28,7 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
     borderRadius: 8,
     backgroundColor: "#fff",
-    color: "#333", 
+    color: "#333",
   },
   homeTitle: {
     fontSize: 36,
@@ -90,6 +89,37 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
+  },
+  roleContainer: {
+    marginVertical: 20,
+    width: "100%",
+    alignItems: "center",
+  },
+  roleOption: {
+    width: "90%",
+    padding: 15,
+    marginVertical: 5,
+    borderWidth: 1,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  selectedRole: {
+    backgroundColor: "green",
+    borderColor: "green",
+  },
+  unselectedRole: {
+    backgroundColor: "#fff",
+    borderColor: "#ddd",
+  },
+  roleText: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  selectedText: {
+    color: "#fff",
+  },
+  unselectedText: {
+    color: "#333",
   },
 });
 
