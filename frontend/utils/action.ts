@@ -63,10 +63,11 @@ export async function login(email: string, password: string) {
         throw new Error("Invalid credentials or no user found!");
       }
 
+      
       try {
         // Store user information in AsyncStorage
         AsyncStorage.multiSet([
-          ["id", String(user.id)], // Convert numeric ID to string
+          ["id", user.id], // Convert numeric ID to string
           ["authToken", uuidv4()], // Use uuidv4() for authToken
           ["email", user.email],
           ["firstName", user.first_name],
@@ -121,6 +122,19 @@ export async function fetchUserInfo(id) {
     .from("wallet")
     .select("*")
     .eq("user_id", id);
+
+  if (error) {
+    console.log(data);
+  }
+
+  return data;
+}
+
+export async function fetchUserFromQR(qrCode) {
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("qr_code", qrCode);
 
   if (error) {
     console.log(data);
