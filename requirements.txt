@@ -1,0 +1,5 @@
+fastapi
+easyocr
+matplotlib
+numpy
+requests
