@@ -18,9 +18,7 @@ const styles = StyleSheet.create({
 
   logo: {
     width: 300,
-    width: 300,
     height: 300,
-    marginBottom: 5,
     marginBottom: 5,
   },
   input: {
@@ -31,7 +29,6 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
     borderRadius: 8,
     backgroundColor: "#fff",
-    color: "#333",
     color: "#333",
   },
   homeTitle: {
