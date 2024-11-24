@@ -21,7 +21,22 @@ export async function register(
     password: hashSync(password, salt),
     role: "student",
   });
+  
+  const { data, error: selectError } = await supabase
+  .from('users')
+  .select("*")
+  .eq('email', email)
 
+  if(data){
+    createWallet(data[0].id)
+  }else{
+    console.log("Erro creating wallet")
+  }
+
+  if (selectError) {
+    console.log(selectError);
+  }
+  
   if (error) {
     console.log(error);
   }
@@ -35,7 +50,9 @@ export async function login(email: string, password: string) {
     .select("*")
     .eq("email", email.trim());
 
-  if (data) {
+  console.log(data)
+
+  if (data && data.length > 0) {
     AsyncStorage.setItem("id", data[0].id);
     AsyncStorage.setItem("authToken", uuidv4());
     AsyncStorage.setItem("email", data[0].email);
@@ -58,9 +75,9 @@ export async function login(email: string, password: string) {
 
 
 export async function createWallet(
-  id: int,
+  id,
 ) {
-  const { error } = await supabase.from("users").insert({
+  const { error } = await supabase.from("wallet").insert({
     user_id: id,
     total_points: 0,
   });
@@ -70,9 +87,16 @@ export async function createWallet(
   }
 }
 
-export async function fetchWalletData(id: int){
+export async function fetchWalletData(id){
   const { data, error } = await supabase
   .from("wallet")
   .select("*")
   .eq("user_id", id);
+
+  if(data){
+    AsyncStorage.setItem("totalPoints", data[0].total_points);
+  }
+  if(error){
+    console.log(data)
+  }
 }

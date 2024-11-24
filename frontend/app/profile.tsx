@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from "react-native";
 import styles from "../styles/styledcomponents";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 
 export default function ProfileScreen() {
-  const [user, setUser] = useState(null); 
+  const [user, setUser] = useState({firstName: "", lastName:"", email: ""});
+  const [edit, setEdit] = useState(false); 
   const [loading, setLoading] = useState(true); 
   const router = useRouter();
 
@@ -12,19 +14,27 @@ export default function ProfileScreen() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        // add the fetch user id logic here from the backemd
+        const storedFirstName = await AsyncStorage.getItem("firstName");
+        const storedLastName = await AsyncStorage.getItem("lastName");
+        const storedEmail = await AsyncStorage.getItem("email")
+
+        setUser({
+          firstName: storedFirstName,
+          lastName: storedLastName,
+          email: storedEmail
+        })
         // Simulate an API call
         const response = await new Promise((resolve) =>
           setTimeout(() => {
             resolve({
-              firstName: "Jane",
-              lastName: "Doe",
-              email: "janedoe@example.com",
+              firstName: user.firstName,
+              lastName: user.lastName,
+              email: user.email,
               profileImage: "https://via.placeholder.com/150", // sample image
             });
           }, 1000)
         );
-
-        setUser(response);
       } catch (error) {
         Alert.alert("Error", "Failed to fetch user data.");
       } finally {
