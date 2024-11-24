@@ -11,6 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import QRCode from "react-qr-code";
 import { useRouter } from "expo-router";
 import styles from "../styles/styledcomponents";
+import { fetchWalletData } from "../utils/action";
 
 
 export default function QRScreen() {
@@ -22,15 +23,23 @@ export default function QRScreen() {
 
   useEffect(() => {
     const fetchUserData = async () => {
+
+      const walletData = async() => {
+        const storedUserId = await AsyncStorage.getItem("id");
+        const data = await fetchWalletData(storedUserId);
+        setBalance(data[0].total_points)
+        setLoading(false)
+      }
+  
+      walletData()
+
       try {
         // Fetch user data from AsyncStorage
         const storedUserId = await AsyncStorage.getItem("id");
-        const storedBalance = await AsyncStorage.getItem("balance");
         const storedQRCode = await AsyncStorage.getItem("qrCode");
-
-        if (storedUserId && storedBalance && storedQRCode) {
+        
+        if (storedUserId && storedQRCode) {
           setUserId(storedUserId);
-          setBalance(storedBalance);
           setQRCode(storedQRCode);
         } else {
           Alert.alert(
