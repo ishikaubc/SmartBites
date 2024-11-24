@@ -5,7 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 
 export default function ProfileScreen() {
-  const [user, setUser] = useState({firstName: "", lastName:"", email: ""});
+  const [user, setUser] = useState({firstName: "", lastName:"", email: "", profileImage: ""});
   const [edit, setEdit] = useState(false); 
   const [loading, setLoading] = useState(true); 
   const router = useRouter();
@@ -22,7 +22,8 @@ export default function ProfileScreen() {
         setUser({
           firstName: storedFirstName,
           lastName: storedLastName,
-          email: storedEmail
+          email: storedEmail,
+          profileImage: "https://via.placeholder.com/150"
         })
         // Simulate an API call
         const response = await new Promise((resolve) =>
