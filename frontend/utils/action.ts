@@ -28,9 +28,8 @@ export async function register(
 }
 
 export async function login(email: string, password: string) {
-  const userId = uuid
   const hashedPassword = hashSync(password, salt);
-
+  
   const { data, error } = await supabase
     .from("users")
     .select("*")

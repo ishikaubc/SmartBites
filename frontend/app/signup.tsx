@@ -39,7 +39,7 @@ export default function SignupScreen() {
     setError("");
 
     try {
-      register(firstName, lastName, email, password, role).then((res) => console.log(res)); // Pass the role
+      await register(firstName, lastName, email, password, role); // Pass the role
       Alert.alert("Signup Successful!", "You can now log in.");
       router.push("/login");
     } catch (error) {

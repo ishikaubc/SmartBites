@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import { View, Text, TextInput, Alert, Button } from "react-native";
 import styles from "../styles/styledcomponents";
-import { login } from "../utils/action"; 
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { login } from "../utils/action";
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -21,7 +20,7 @@ export default function LoginScreen() {
       setError("Email and password are required.");
       return;
     }
-  
+
     if (!validateEmail(email)) {
       setError("Please enter a valid email address.");
       return;
@@ -31,21 +30,13 @@ export default function LoginScreen() {
       login(email, password);
       router.push("/main");
     }
-  
+
     try {
       // Call Supabase login function
       const data = await login(email, password);
-  
+      console.log(data);
       if (data && data.length > 0) {
-        const user = data[0];
-  
-        // Save token, user ID, and role in AsyncStorage
-        await AsyncStorage.setItem("authToken", "dummyAuthToken");
-        await AsyncStorage.setItem("userId", user.id);
-        await AsyncStorage.setItem("role", user.role); 
-        Alert.alert("Login Successful!", `Welcome back, ${user.first_name}!`);
-  
-        // Redirect to the main page
+        console.log(data);
         router.push("/main");
       } else {
         throw new Error("Invalid email or password.");
@@ -54,7 +45,6 @@ export default function LoginScreen() {
       setError("Invalid email or password.");
     }
   };
-  
 
   return (
     <View style={styles.container}>
