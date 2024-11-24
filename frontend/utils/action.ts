@@ -48,9 +48,7 @@ export async function login(email: string, password: string) {
   const { data, error } = await supabase
     .from("users")
     .select("*")
-    .eq("email", email.trim());
-
-  console.log(data)
+    .match({ email: email.trim(), password: hashSync(password, salt) })
 
   if (data && data.length > 0) {
     AsyncStorage.setItem("id", data[0].id);
