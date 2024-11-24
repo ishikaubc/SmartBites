@@ -19,6 +19,7 @@ export async function register(
     qr_code: uuidv4(),
     order_history_id: hashSync(password, salt).substring(0, 15),
     password: hashSync(password, salt),
+    role: "user",
   });
 
   if (error) {
