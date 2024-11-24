@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "SmartBite",
-    "slug": "smart-bite",
+    "slug": "test",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -42,7 +42,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "0f1aae71-805c-4496-970d-dd59c3d025d8"
+        "projectId": "7a92e841-33f4-478e-9baf-a6e7385acb05"
       }
     },
     "owner": "smartbites"
