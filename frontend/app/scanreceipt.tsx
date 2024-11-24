@@ -11,7 +11,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Camera } from "expo-camera"; // Optional if you plan to use camera permissions later
 import styles from "../styles/styledcomponents";
 
-const API_URL = "http://your-api-url/receipt_calc";
+// const API_URL = "http://localhost:8000/receipt_calc";
 
 export default function ScanReceiptPage() {
   const [hasPermission, setHasPermission] = useState(null); // Camera and gallery permissions
@@ -39,7 +39,7 @@ export default function ScanReceiptPage() {
 
     try {
       setUploading(true); // Start uploading indicator
-      const response = await fetch(API_URL, {
+      const response = await fetch("http://localhost:8000/receipt_calc", {
         method: "POST",
         headers: {
           "Content-Type": "multipart/form-data",
