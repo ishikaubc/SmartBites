@@ -72,7 +72,7 @@ export default function UploadScanFileScreen() {
 
       {/* Pick File Button */}
       <TouchableOpacity
-        style={[styles.button, styles.uploadButton]}
+        style={[styles.button, styles.button]}
         onPress={handlePickFile}
       >
         <Text style={styles.buttonText}>Pick a File</Text>
@@ -80,7 +80,7 @@ export default function UploadScanFileScreen() {
 
       {/* Upload File Button */}
       <TouchableOpacity
-        style={[styles.button, styles.qrButton]}
+        style={[styles.button, styles.button]}
         onPress={handleUploadFile}
         disabled={loading} // Disable button while uploading
       >
