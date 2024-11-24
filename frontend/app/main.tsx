@@ -58,51 +58,59 @@ export default function MainPage() {
       <Text style={styles.subtitle}>
         Role: {role.charAt(0).toUpperCase() + role.slice(1)}
       </Text>
-
-      {/* students will have option to view their wallet, view their profile and generate QR */}
+  
+      {/* Options for Students */}
       {role === "student" && (
         <>
           <TouchableOpacity
-            style={[styles.button, styles.button]}
+            style={[styles.featureButton]}
             onPress={() => router.push("/wallet")} // Navigate to Wallet page
           >
-            <Text style={styles.buttonText}>View Wallet</Text>
+            <Text style={styles.featureButtonText}>View Wallet</Text>
           </TouchableOpacity>
-
+  
           <TouchableOpacity
-            style={[styles.button, styles.button]}
+            style={[styles.featureButton]}
             onPress={() => router.push("/profile")} // Navigate to Profile page
           >
-            <Text style={styles.buttonText}>View Profile</Text>
+            <Text style={styles.featureButtonText}>View Profile</Text>
           </TouchableOpacity>
-
+  
           <TouchableOpacity
-            style={[styles.button, styles.button]}
+            style={[styles.featureButton]}
             onPress={() => router.push("/qr")} // Navigate to QR page
           >
-            <Text style={styles.buttonText}>Generate QR Code</Text>
+            <Text style={styles.featureButtonText}>Generate QR Code</Text>
           </TouchableOpacity>
         </>
       )}
-
+  
       {/* Options for Cashiers */}
       {role === "cashier" && (
         <>
           <TouchableOpacity
-            style={[styles.button, styles.button]}
+            style={[styles.featureButton]}
             onPress={() => router.push("/upload")} // Navigate to File Upload page
           >
-            <Text style={styles.buttonText}>Upload Scan File</Text>
+            <Text style={styles.featureButtonText}>Upload Scan File</Text>
           </TouchableOpacity>
-
+  
           <TouchableOpacity
-            style={[styles.button, styles.button]}
+            style={[styles.featureButton]}
             onPress={() => router.push("/profile")} // Navigate to Profile page
           >
-            <Text style={styles.buttonText}>View Profile</Text>
+            <Text style={styles.featureButtonText}>View Profile</Text>
           </TouchableOpacity>
         </>
       )}
+  
+      {/* Sign Out Button */}
+      <TouchableOpacity
+        style={[styles.button, styles.button]}
+        onPress={handleSignOut}
+      >
+        <Text style={styles.buttonText}>Sign Out</Text>
+      </TouchableOpacity>
     </View>
   );
-}
+}  
