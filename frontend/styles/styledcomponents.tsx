@@ -128,6 +128,27 @@ const styles = StyleSheet.create({
   unselectedText: {
     color: "#333",
   },
+  featureButton: {
+    width: "90%",
+    padding: 15,
+    marginBottom: 15,
+    backgroundColor: "#fff", // White background
+    borderColor: "#11960c", // Green border
+    borderWidth: 2,
+    borderRadius: 8,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3, // Adds shadow on Android
+  },
+  
+  featureButtonText: {
+    color: "#11960c",
+    fontSize: 18, // Slightly larger text for emphasis
+    fontWeight: "bold",
+  },
   voucher: {
     width: "100%",
     marginBottom: 15,

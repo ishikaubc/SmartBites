@@ -37,7 +37,10 @@ export default function WalletScreen() {
 
   const handleRedeemPoints = async () => {
     if (balance < 50) {
-      Alert.alert("Insufficient Balance", "You need at least 50 points to redeem.");
+      Alert.alert(
+        "Insufficient Balance",
+        "You need at least 50 points to redeem."
+      );
       return;
     }
 
@@ -52,7 +55,7 @@ export default function WalletScreen() {
     }
   };
 
-  if (loading) {
+ if (loading) {
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large" color="#4CAF50" />
@@ -63,13 +66,15 @@ export default function WalletScreen() {
 
   return (
     <View style={styles.container}>
+      {/* Back Button */}
       <TouchableOpacity
         style={styles.backButton}
         onPress={() => router.back()} // Go back to the previous page
       >
         <Text style={styles.backButtonText}>← Back</Text>
       </TouchableOpacity>
-
+  
+      {/* Wallet Info */}
       <Text style={styles.title}>Wallet</Text>
       <Text style={{ fontSize: 18, marginBottom: 10 }}>
         Total Points Earned: <Text style={{ fontWeight: "bold" }}>{points}</Text>
@@ -77,9 +82,10 @@ export default function WalletScreen() {
       <Text style={{ fontSize: 18, marginBottom: 20 }}>
         Current Balance: <Text style={{ fontWeight: "bold" }}>{balance}</Text>
       </Text>
-
+  
+      {/* Redeem Points Button */}
       <TouchableOpacity
-        style={[styles.button, styles.button]}
+        style={styles.button}
         onPress={handleRedeemPoints}
       >
         <Text style={styles.buttonText}>Redeem Points</Text>
