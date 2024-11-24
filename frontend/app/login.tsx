@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useRouter } from "expo-router";
-import { View, Text, TextInput, Alert, Button } from "react-native";
+import { View, Text, TextInput, Alert, Button, TouchableOpacity } from "react-native";
 import styles from "../styles/styledcomponents";
 import { login } from "../utils/action";
 
@@ -68,12 +68,12 @@ export default function LoginScreen() {
         onChangeText={setPassword}
       />
 
-      <Button
+     <TouchableOpacity
+        style={[styles.button, styles.loginButton]}
         onPress={handleLogin}
-        title="Log In"
-        color="#11960c"
-        accessibilityLabel="Log in to access your account"
-      />
+      >
+        <Text style={styles.buttonText}>Log In</Text>
+      </TouchableOpacity>
     </View>
   );
 }

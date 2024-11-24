@@ -15,11 +15,9 @@ const styles = StyleSheet.create({
     color: "#333",
   },
 
-
   logo: {
-    width: 300,
-    height: 300,
-    marginBottom: 5,
+    width: 400, // Adjusted size to make it fit better
+    height: 250, // Reduced height for balanced spacing
   },
   input: {
     width: "100%",
@@ -32,18 +30,17 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   homeTitle: {
-    fontSize: 36,
+    fontSize: 32,
     fontWeight: "bold",
     color: "#333",
-    marginBottom: 10,
     textAlign: "center",
   },
   homeSubtitle: {
-    fontSize: 18,
+    fontSize: 16,
     color: "#666",
     textAlign: "center",
     marginHorizontal: 20,
-    marginBottom: 20,
+    marginBottom: 30,
   },
   button: {
     width: "100%",
@@ -51,7 +48,7 @@ const styles = StyleSheet.create({
     backgroundColor: "green", // Green button color
     borderRadius: 8,
     alignItems: "center",
-    margin: 6
+    margin: 6,
   },
   buttonText: {
     color: "#fff",
@@ -77,7 +74,7 @@ const styles = StyleSheet.create({
   signoutButton: {
     backgroundColor: "#FF0000", // Orange button for QR Code
   },
-  uploadButton : {
+  uploadButton: {
     backgroundColor: "#FF0000", // Orange button for QR Code
   },
   errorText: {
