@@ -63,21 +63,21 @@ export default function MainPage() {
       {role === "student" && (
         <>
           <TouchableOpacity
-            style={[styles.button, styles.walletButton]}
+            style={[styles.button, styles.button]}
             onPress={() => router.push("/wallet")} // Navigate to Wallet page
           >
             <Text style={styles.buttonText}>View Wallet</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.button, styles.profileButton]}
+            style={[styles.button, styles.button]}
             onPress={() => router.push("/profile")} // Navigate to Profile page
           >
             <Text style={styles.buttonText}>View Profile</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.button, styles.qrButton]}
+            style={[styles.button, styles.button]}
             onPress={() => router.push("/qr")} // Navigate to QR page
           >
             <Text style={styles.buttonText}>Generate QR Code</Text>
@@ -89,14 +89,14 @@ export default function MainPage() {
       {role === "cashier" && (
         <>
           <TouchableOpacity
-            style={[styles.button, styles.uploadButton]}
+            style={[styles.button, styles.button]}
             onPress={() => router.push("/upload")} // Navigate to File Upload page
           >
             <Text style={styles.buttonText}>Upload Scan File</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.button, styles.profileButton]}
+            style={[styles.button, styles.button]}
             onPress={() => router.push("/profile")} // Navigate to Profile page
           >
             <Text style={styles.buttonText}>View Profile</Text>

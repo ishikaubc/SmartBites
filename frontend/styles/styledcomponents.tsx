@@ -54,28 +54,30 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
   },
+  backButton: {
+    position: "absolute",
+  top: 20, // Adjust to move vertically
+  right: 20, // Align to the right
+  padding: 10,
+  backgroundColor: "#f0f0f0",
+  borderRadius: 5,
+  elevation: 3, 
+  shadowColor: "#000", 
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.2,
+  shadowRadius: 4,
+  },
+  backButtonText: {
+    color: "#333",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
   // Specific styles for Login/Signup buttons
   loginButton: {
     backgroundColor: "green",
   },
   signupButton: {
     backgroundColor: "green",
-  },
-  // Specific styles for Main Page buttons
-  walletButton: {
-    backgroundColor: "#4CAF50", // Green button for Wallet
-  },
-  profileButton: {
-    backgroundColor: "#2196F3", // Blue button for Profile
-  },
-  qrButton: {
-    backgroundColor: "#FF9800", // Orange button for QR Code
-  },
-  signoutButton: {
-    backgroundColor: "#FF0000", // Orange button for QR Code
-  },
-  uploadButton: {
-    backgroundColor: "#FF0000", // Orange button for QR Code
   },
   errorText: {
     color: "red",
@@ -126,6 +128,50 @@ const styles = StyleSheet.create({
   unselectedText: {
     color: "#333",
   },
+  voucher: {
+    width: "100%",
+    marginBottom: 15,
+    borderRadius: 12,
+    padding: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#e8f5e9", // Light green background
+    borderWidth: 2,
+    borderColor: "#4CAF50", // Dark green border
+    elevation: 3, // Shadow for Android
+    shadowColor: "#000", // Shadow for iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },
+  voucherSmall: {
+    borderLeftWidth: 5,
+    borderColor: "#81C784", // Slightly lighter green for 50 points
+  },
+  voucherMedium: {
+    borderLeftWidth: 5,
+    borderColor: "#66BB6A", // Medium green for 100 points
+  },
+  voucherLarge: {
+    borderLeftWidth: 5,
+    borderColor: "#4CAF50", // Dark green for 200 points
+  },
+  voucherExtraLarge: {
+    borderLeftWidth: 5,
+    borderColor: "#388E3C", // Darkest green for 500 points
+  },
+  voucherText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#388E3C", // Dark green for main text
+  },
+  voucherSubText: {
+    fontSize: 14,
+    color: "#4CAF50", // Secondary text color
+    textAlign: "center",
+    marginTop: 5,
+  },
+  
 });
 
 export default styles;
