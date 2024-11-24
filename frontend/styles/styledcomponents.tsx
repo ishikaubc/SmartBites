@@ -72,6 +72,9 @@ const styles = StyleSheet.create({
   qrButton: {
     backgroundColor: "#FF9800", // Orange button for QR Code
   },
+  uploadButton: {
+    backgroundColor: "green", 
+  },
   errorText: {
     color: "red",
     marginBottom: 10,
