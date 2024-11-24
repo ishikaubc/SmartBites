@@ -7,132 +7,91 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from "react-native";
+import { Camera, CameraView } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
-import { Camera } from "expo-camera"; // Optional if you plan to use camera permissions later
-import styles from "../styles/styledcomponents";
 
-// const API_URL = "http://localhost:8000/receipt_calc";
+const API_URL = "http://your-api-url/receipt_calc"; // Replace with your backend API
 
 export default function ScanReceiptPage() {
-  const [hasPermission, setHasPermission] = useState(null); // Camera and gallery permissions
-  const [uploading, setUploading] = useState(false); // Upload state
-  const [scannedImage, setScannedImage] = useState(null); // Stores selected image
-
-  // Request permissions for camera and gallery on component mount
-  useEffect(() => {
-    (async () => {
-      const { status: cameraStatus } =
-        await Camera.requestCameraPermissionsAsync();
-      const { status: galleryStatus } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-      setHasPermission(
-        cameraStatus === "granted" && galleryStatus === "granted"
-      );
-    })();
-  }, []);
-
-  // Handle uploading the receipt image
-  const handleUploadReceipt = async (imageUri) => {
-    const formData = new FormData();
-    formData.append("file", {
-      uri: imageUri,
-      name: "receipt.jpg",
-      type: "image/jpeg",
-    });
-
-    try {
-      setUploading(true); // Start uploading indicator
-      const response = await fetch("http://localhost:8000/receipt_calc", {
-        method: "POST",
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      Alert.alert(
-        "Success",
-        `Receipt validated. You earned ${data.Total_Points} points!`
-      );
-    } catch (error) {
-      Alert.alert("Error", "Failed to process receipt. Please try again.");
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  // Capture receipt using the camera
-  const handleCaptureReceipt = async () => {
-    try {
-      // Check camera permission before launching
-      const { status } = await Camera.getCameraPermissionsAsync();
-      if (status !== "granted") {
-        Alert.alert(
-          "Permission Required",
-          "Camera permission is required to capture receipts. Please enable it in settings."
-        );
+    const [hasCameraPermission, setHasCameraPermission] = useState(null); // Camera permission state
+    const [cameraRef, setCameraRef] = useState(null); // Camera reference
+    const [uploading, setUploading] = useState(false); // Upload state
+    const [cameraOn, setCameraOn] = useState(false); // Camera toggle state
+  
+    // Request camera permissions when the component mounts
+    useEffect(() => {
+      (async () => {
+        const { status: cameraStatus } =
+          await Camera.requestCameraPermissionsAsync();
+        setHasCameraPermission(cameraStatus === "granted");
+      })();
+    }, []);
+  
+    // Function to handle receipt capture and upload
+    const handleCaptureReceipt = async () => {
+      if (!cameraRef) {
+        Alert.alert("Error", "Camera not available.");
         return;
       }
-
-      const result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images, // Allow only images
-        allowsEditing: true, // Allow editing the image before uploading
-        aspect: [4, 3], // Set aspect ratio
-        quality: 1, // Set image quality
-      });
-
-      if (!result.canceled) {
-        setScannedImage(result.assets[0].uri); // Store the image URI
-        await handleUploadReceipt(result.assets[0].uri); // Upload the captured image
+  
+      try {
+        const photo = await cameraRef.takePictureAsync({
+          quality: 1, // High-quality image
+          base64: false, // Avoid base64 for larger images
+        });
+  
+        if (photo && photo.uri) {
+          setCameraOn(false); // Turn off the camera view
+          await handleUploadReceipt(photo.uri); // Upload the captured image
+        }
+      } catch (error) {
+        console.error("Error capturing receipt:", error);
+        Alert.alert("Error", "Failed to capture receipt. Please try again.");
       }
-    } catch (error) {
-      console.error("Error capturing receipt:", error);
-      Alert.alert("Error", "Failed to capture receipt. Please try again.");
-    }
-  };
-
-  // Pick receipt from the gallery
-  const handlePickReceipt = async () => {
-    try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
+    };
+  
+    // Function to upload the receipt image
+    const handleUploadReceipt = async (imageUri) => {
+      const formData = new FormData();
+      formData.append("file", {
+        uri: imageUri, // Image URI
+        name: "receipt.jpg", // File name (can be dynamic)
+        type: "image/jpeg", // MIME type
       });
-
-      if (!result.canceled) {
-        setScannedImage(result.assets[0].uri); // Store image URI
-        handleUploadReceipt(result.assets[0].uri); // Upload the image
+  
+      try {
+        setUploading(true); // Start uploading indicator
+  
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          body: formData, // FormData payload
+        });
+  
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+  
+        const data = await response.json(); // Parse the backend response
+  
+        // Display success message with points
+        if (data.Total_Points) {
+          Alert.alert("Success", `You earned ${data.Total_Points} points!`);
+        } else {
+          Alert.alert(
+            "Success",
+            "Receipt processed successfully, but no points awarded."
+          );
+        }
+      } catch (error) {
+        console.error("Error uploading receipt:", error);
+        Alert.alert("Error", "Failed to process receipt. Please try again.");
+      } finally {
+        setUploading(false); // Stop uploading indicator
       }
-    } catch (error) {
-      Alert.alert("Error", "Failed to select receipt. Please try again.");
-    }
-  };
-
-  // Handle permissions not granted
-  if (hasPermission === null) {
-    return (
-      <View style={styles.container}>
-        <Text>Requesting camera and gallery permissions...</Text>
-      </View>
-    );
-  }
-
-  if (hasPermission === false) {
-    return (
-      <View style={styles.container}>
-        <Text>
-          Permission denied. Please allow camera and gallery access in settings.
-        </Text>
-      </View>
-    );
-  }
+    };
 
   return (
     <View style={styles.container}>
@@ -140,17 +99,82 @@ export default function ScanReceiptPage() {
 
       {uploading && <ActivityIndicator size="large" color="#0000ff" />}
 
-      <TouchableOpacity style={styles.button} onPress={handleCaptureReceipt}>
-        <Text style={styles.buttonText}>Capture Receipt</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.button} onPress={handlePickReceipt}>
-        <Text style={styles.buttonText}>Pick Receipt from Gallery</Text>
-      </TouchableOpacity>
-
-      {scannedImage && (
-        <Text style={styles.text}>Receipt image processed successfully.</Text>
+      {cameraOn ? (
+        <CameraView
+          style={styles.camera}
+          ref={(ref) => setCameraRef(ref)} // Set camera reference
+        >
+          <View style={styles.cameraControls}>
+            <TouchableOpacity
+              style={styles.captureButton}
+              onPress={handleCaptureReceipt}
+            >
+              <Text style={styles.buttonText}>Capture</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={() => setCameraOn(false)} // Turn off the camera
+            >
+              <Text style={styles.buttonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </CameraView>
+      ) : (
+        <>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => setCameraOn(true)} // Turn on the camera
+          >
+            <Text style={styles.buttonText}>Turn On Camera</Text>
+          </TouchableOpacity>
+        </>
       )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f8f9fa",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  camera: {
+    flex: 1,
+    width: "100%",
+  },
+  cameraControls: {
+    flex: 1,
+    backgroundColor: "transparent",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 20,
+  },
+  captureButton: {
+    backgroundColor: "#28a745",
+    padding: 15,
+    borderRadius: 10,
+  },
+  cancelButton: {
+    backgroundColor: "#dc3545",
+    padding: 15,
+    borderRadius: 10,
+  },
+  button: {
+    backgroundColor: "#007bff",
+    padding: 15,
+    borderRadius: 10,
+    marginVertical: 10,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    textAlign: "center",
+  },
+});
