@@ -3,18 +3,20 @@ import { View, Text, TouchableOpacity, Alert } from "react-native";
 import styles from "../styles/styledcomponents";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router"; 
+import { fetchWalletData } from "../utils/action";
 
 export default function VoucherScreen() {
   const [balance, setBalance] = useState(0);
   const router = useRouter();
 
   useEffect(() => {
-    const fetchBalance = async () => {
-      const userBalance = await AsyncStorage.getItem("userBalance");
-      setBalance(userBalance ? parseInt(userBalance) : 0);
-    };
+    const walletData = async() => {
+      const storedUserId = await AsyncStorage.getItem("id");
+      const data = await fetchWalletData(storedUserId);
+      setBalance(data[0].total_points)
+    }
 
-    fetchBalance();
+    walletData()
   }, []);
 
   const handleRedeem = (points, reward) => {

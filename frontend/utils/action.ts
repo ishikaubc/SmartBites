@@ -65,7 +65,7 @@ export async function login(email: string, password: string) {
 
       try {
         // Store user information in AsyncStorage
-        await AsyncStorage.multiSet([
+        AsyncStorage.multiSet([
           ["id", String(user.id)], // Convert numeric ID to string
           ["authToken", uuidv4()], // Use uuidv4() for authToken
           ["email", user.email],
