@@ -110,7 +110,7 @@ export default function ScanBarcodePage() {
           // Display success alert
           Alert.alert(
             "Success",
-            `Receipt validated. ${pointsEarned} points added to user ${userId}'s wallet!`
+            `Receipt validated. ${pointsEarned} points added to user ${id}'s wallet!`
           );
         } catch (error) {
           Alert.alert("Error", "Failed to process receipt. Please try again.");
