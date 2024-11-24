@@ -9,8 +9,8 @@ import {
 import { Camera, CameraView, CameraType } from "expo-camera"; // Barcode Scanner
 import * as ImagePicker from "expo-image-picker"; // For receipt upload
 import styles from "../styles/styledcomponents";
-import { fetchUserInfo } from "../utils/action";
 import { fetchWalletData } from "../utils/action";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ScanBarcodePage() {
   const [hasPermission, setHasPermission] = useState(null); // Camera permission state
@@ -25,6 +25,9 @@ export default function ScanBarcodePage() {
     const getCameraPermission = async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === "granted");
+
+      const storedId = await AsyncStorage.getItem("id");
+      setUserId(storedId)
     };
 
     getCameraPermission();
@@ -34,8 +37,6 @@ export default function ScanBarcodePage() {
     setScanned(true);
 
     try {
-      // Barcode contains user_id
-      const userId = data;
 
       // Fetch wallet data using user_id
       const walletData = await fetchWalletData(id);
@@ -46,10 +47,9 @@ export default function ScanBarcodePage() {
         // Display user and wallet details
         Alert.alert(
           "Barcode Scanned!",
-          `User ID: ${userId}\nWallet Points: ${wallet.total_points}`
+          `User ID: ${id}\nWallet Points: ${wallet.total_points}`
         );
 
-        setUserId(id); // Update state with the user ID
       } else {
         Alert.alert("User Not Found", `No wallet found for User ID: ${id}`);
       }

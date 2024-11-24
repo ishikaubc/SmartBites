@@ -129,3 +129,16 @@ export async function fetchUserInfo(id) {
 
   return data;
 }
+
+export async function fetchUserFromQR(qrCode) {
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("qr_code", qrCode);
+
+  if (error) {
+    console.log(data);
+  }
+
+  return data;
+}
