@@ -10,17 +10,17 @@ import { Camera, CameraView, CameraType } from "expo-camera"; // Barcode Scanner
 import * as ImagePicker from "expo-image-picker"; // For receipt upload
 import styles from "../styles/styledcomponents";
 import { fetchUserInfo } from "../utils/action";
+import { fetchWalletData } from "../utils/action";
 
 export default function ScanBarcodePage() {
-  const [hasPermission, setHasPermission] = useState(null); // to store the camera permission state
-  const [hasImagePickerPermission, setHasImagePickerPermission] =
-    useState(null); // Image Picker permission state
+  const [hasPermission, setHasPermission] = useState(null); // Camera permission state
   const [scanned, setScanned] = useState(false); // Barcode scanned state
-  const [userId, setUserId] = useState(""); // to fetch user information state
-  const [uploading, setUploading] = useState(false);
+  const [id, setUserId] = useState(""); // User ID state
+  const [walletPoints, setWalletPoints] = useState(0); // Wallet points state
+  const [uploading, setUploading] = useState(false); // Loading state
   const [type, setType] = useState<CameraType>("back");
 
-  // Request camera and image picker permission
+  // Request camera permission
   useEffect(() => {
     const getCameraPermission = async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
@@ -31,32 +31,31 @@ export default function ScanBarcodePage() {
   }, []);
 
   const handleBarCodeScanned = async ({ data }) => {
-    setScanned(true); 
-  
+    setScanned(true);
+
     try {
-      //barcode contains userId
-      const fetchedUserId = data;
-  
-      // Fetch user info from Supabase
-      const userInfo = await fetchUserInfo(fetchedUserId);
-  
-      if (userInfo && userInfo.length > 0) {
-        const user = userInfo[0]; 
-        setUserId(fetchedUserId);
-  
-        // Display user details
+      // Barcode contains user_id
+      const userId = data;
+
+      // Fetch wallet data using user_id
+      const walletData = await fetchWalletData(id);
+
+      if (walletData && walletData.length > 0) {
+        const wallet = walletData[0]; // Wallet entry for the user
+
+        // Display user and wallet details
         Alert.alert(
           "Barcode Scanned!",
-          `User ID: ${fetchedUserId}\nWallet Points: ${user.points || 0}`
+          `User ID: ${userId}\nWallet Points: ${wallet.total_points}`
         );
+
+        setUserId(id); // Update state with the user ID
       } else {
-        Alert.alert(
-          "User Not Found",
-          `No user found in the wallet with ID: ${fetchedUserId}`
-        );
+        Alert.alert("User Not Found", `No wallet found for User ID: ${id}`);
       }
     } catch (error) {
-      Alert.alert("Error", "Failed to fetch user details.");
+      console.error("Error fetching wallet data:", error);
+      Alert.alert("Error", "Failed to fetch wallet details. Please try again.");
     }
   };
 
@@ -64,8 +63,9 @@ export default function ScanBarcodePage() {
     setType((current) => (current === "back" ? "front" : "back"));
   };
 
-  
-{/*to send the image to backend to calculate points */}
+  {
+    /*to send the image to backend to calculate points */
+  }
   const API_URL = "http://your-api-url/receipt_calc";
 
   const handleUploadReceipt = async () => {
@@ -77,20 +77,19 @@ export default function ScanBarcodePage() {
         aspect: [4, 3],
         quality: 1,
       });
-  
+
       if (!result.canceled) {
-        setUploading(true); 
-  
+        setUploading(true);
+
         const imageUri = result.assets[0].uri; // Get the selected image URI
-  
-        
+
         const formData = new FormData();
         formData.append("file", {
           uri: imageUri,
-          name: "receipt.jpg", 
-          type: "image/jpeg",  
+          name: "receipt.jpg",
+          type: "image/jpeg",
         });
-  
+
         try {
           // Send image to backend
           const response = await fetch(API_URL, {
@@ -100,14 +99,14 @@ export default function ScanBarcodePage() {
             },
             body: formData,
           });
-  
+
           if (!response.ok) {
             throw new Error(`Error: ${response.status}`);
           }
-  
+
           const data = await response.json(); // Get the points from the response
           const pointsEarned = data.Points;
-  
+
           // Display success alert
           Alert.alert(
             "Success",
@@ -123,7 +122,6 @@ export default function ScanBarcodePage() {
       Alert.alert("Error", "Failed to upload receipt. Please try again.");
     }
   };
- 
 
   if (hasPermission === null) {
     return (
@@ -162,7 +160,7 @@ export default function ScanBarcodePage() {
       {scanned && (
         <>
           <Text style={{ marginTop: 20, fontSize: 16 }}>
-            User ID: {userId || "No User Scanned"}
+            User ID: {id || "No User Scanned"}
           </Text>
           <TouchableOpacity
             style={styles.featureButton}
@@ -176,7 +174,7 @@ export default function ScanBarcodePage() {
       <TouchableOpacity
         style={styles.featureButton}
         onPress={handleUploadReceipt}
-        disabled={uploading || !userId}
+        disabled={uploading || !id}
       >
         <Text style={styles.featureButtonText}>
           {uploading ? "Uploading Receipt..." : "Upload Receipt"}
