@@ -6,18 +6,18 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
-import { Camera, CameraView, CameraType} from "expo-camera"; // Barcode Scanner
+import { Camera, CameraView, CameraType } from "expo-camera"; // Barcode Scanner
 import * as ImagePicker from "expo-image-picker"; // For receipt upload
 import styles from "../styles/styledcomponents";
 
 export default function ScanBarcodePage() {
   const [hasPermission, setHasPermission] = useState(null); // to store the camera permission state
-  const [hasImagePickerPermission, setHasImagePickerPermission] = useState(null); // Image Picker permission state
+  const [hasImagePickerPermission, setHasImagePickerPermission] =
+    useState(null); // Image Picker permission state
   const [scanned, setScanned] = useState(false); // Barcode scanned state
   const [userId, setUserId] = useState(""); // to fetch user information state
-  const [uploading, setUploading] = useState(false); 
- // const [type, setType] = useState(CameraType.back);
- 
+  const [uploading, setUploading] = useState(false);
+  const [type, setType] = useState<CameraType>("back");
 
   // Request camera and image picker permission
   useEffect(() => {
@@ -43,6 +43,10 @@ export default function ScanBarcodePage() {
     }
   };
 
+  const toggleCameraFacing = () => {
+    setType((current) => (current === "back" ? "front" : "back"));
+  };
+
   const handleUploadReceipt = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
@@ -55,7 +59,6 @@ export default function ScanBarcodePage() {
       if (!result.canceled) {
         setUploading(true);
 
-       
         setTimeout(async () => {
           // Example backend request
           const pointsEarned = 5; // user earns 5 points per $5 purchase
@@ -98,12 +101,15 @@ export default function ScanBarcodePage() {
       <Text style={styles.title}>Scan Barcode</Text>
 
       {!scanned && (
-        <CameraView
-        onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
-          style={{ width: "100%", height: 300 }}
-
-        />
-        
+        <>
+          <CameraView
+            onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
+            style={{ width: "100%", height: 300 }}
+          />
+          <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
+            <Text style={styles.text}>Flip Camera</Text>
+          </TouchableOpacity>
+        </>
       )}
 
       {scanned && (
