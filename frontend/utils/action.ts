@@ -1,6 +1,7 @@
 import { supabase } from "../utils/supabase";
 import { genSaltSync, hashSync, compareSync } from "bcrypt-ts";
 import { v4 as uuidv4 } from "uuid";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const salt = genSaltSync(10);
 
@@ -18,6 +19,7 @@ export async function register(
     qr_code: uuidv4(),
     order_history_id: hashSync(password, salt).substring(0, 15),
     password: hashSync(password, salt),
+    role: "student",
   });
 
   if (error) {
@@ -26,14 +28,51 @@ export async function register(
 }
 
 export async function login(email: string, password: string) {
+  const hashedPassword = hashSync(password, salt);
+  
   const { data, error } = await supabase
     .from("users")
     .select("*")
-    .match({ email: email, password: hashSync(password, salt) });
+    .eq("email", email.trim());
+
+  if (data) {
+    AsyncStorage.setItem("id", data[0].id);
+    AsyncStorage.setItem("authToken", uuidv4());
+    AsyncStorage.setItem("email", data[0].email);
+    AsyncStorage.setItem("firstName", data[0].first_name);
+    AsyncStorage.setItem("lastName", data[0].last_name);
+    AsyncStorage.setItem("walletId", data[0].wallet_id);
+    AsyncStorage.setItem("orderHistoryId", data[0].order_history_id);
+    AsyncStorage.setItem("qrCode", data[0].qr_code);
+    AsyncStorage.setItem("role", data[0].role);
+  } else {
+    console.log("No user found !");
+  }
 
   if (error) {
     console.log(error);
   }
 
   return data;
+}
+
+
+export async function createWallet(
+  id: int,
+) {
+  const { error } = await supabase.from("users").insert({
+    user_id: id,
+    total_points: 0,
+  });
+
+  if (error) {
+    console.log(error);
+  }
+}
+
+export async function fetchWalletData(id: int){
+  const { data, error } = await supabase
+  .from("wallet")
+  .select("*")
+  .eq("user_id", id);
 }

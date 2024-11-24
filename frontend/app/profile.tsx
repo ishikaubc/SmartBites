@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from "react-native";
 import styles from "../styles/styledcomponents";
+import { useRouter } from "expo-router";
 
 export default function ProfileScreen() {
   const [user, setUser] = useState(null); 
   const [loading, setLoading] = useState(true); 
+  const router = useRouter();
 
   //hook the fetch profile endpoint whenever ready
   useEffect(() => {
@@ -55,6 +57,13 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
+       {/* Back Button */}
+       <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => router.back()} // Go back to the previous page
+      >
+        <Text style={styles.backButtonText}>← Back</Text>
+      </TouchableOpacity>
       <Image
         source={{ uri: user.profileImage }}
         style={dynamicStyles.profileImage}

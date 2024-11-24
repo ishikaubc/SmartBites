@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Alert, Button } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useRouter } from "expo-router"; 
+import { useRouter } from "expo-router";
+import { View, Text, TextInput, Alert, Button, TouchableOpacity } from "react-native";
 import styles from "../styles/styledcomponents";
 import { login } from "../utils/action";
 
 export default function LoginScreen() {
-  const router = useRouter(); 
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -28,8 +27,22 @@ export default function LoginScreen() {
     }
 
     if (error.length == 0) {
-      await login(email, password);
-      Alert.alert("Login Successful!", `Welcome back, ${email}!`);
+      login(email, password);
+      router.push("/main");
+    }
+
+    try {
+      // Call Supabase login function
+      const data = await login(email, password);
+      console.log(data);
+      if (data && data.length > 0) {
+        console.log(data);
+        router.push("/main");
+      } else {
+        throw new Error("Invalid email or password.");
+      }
+    } catch (err) {
+      setError("Invalid email or password.");
     }
   };
 
@@ -55,12 +68,12 @@ export default function LoginScreen() {
         onChangeText={setPassword}
       />
 
-      <Button
-        onPress={() => handleLogin}
-        title="Log In"
-        color="#11960c"
-        accessibilityLabel="Learn more about this purple button"
-      />
+     <TouchableOpacity
+        style={[styles.button, styles.loginButton]}
+        onPress={handleLogin}
+      >
+        <Text style={styles.buttonText}>Log In</Text>
+      </TouchableOpacity>
     </View>
   );
 }
