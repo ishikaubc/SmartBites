@@ -119,7 +119,7 @@ export async function fetchWalletData(id) {
 
 export async function fetchUserInfo(id) {
   const { data, error } = await supabase
-    .from("wallet")
+    .from("users")
     .select("*")
     .eq("user_id", id);
 
