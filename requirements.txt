@@ -1,5 +1,7 @@
 fastapi
-easyocr
-matplotlib
-numpy
+uvicorn
+python_dotenv
 requests
+supabase
+httpx
+python-multipart
