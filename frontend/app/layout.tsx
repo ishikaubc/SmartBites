@@ -9,6 +9,8 @@ export default function RootLayout() {
       <Stack.Screen name="wallet" options={{ title: "Wallet" }} />
       <Stack.Screen name="profile" options={{ title: "Profile" }} />
       <Stack.Screen name="qr" options={{ title: "QR Code" }} />
+      <Stack.Screen name="voucher" options={{ title: "Voucher" }} />
+      <Stack.Screen name="upload" options={{ title: "Upload" }} />
     </Stack>
   );
 }

@@ -55,7 +55,7 @@ export default function QRScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Your QR Code</Text>
 
-      <View style={customStyles.qrContainer}>
+      <View style={styles.qrContainer}>
         <QRCode size={200} value={userQRCode} />
       </View>
 
