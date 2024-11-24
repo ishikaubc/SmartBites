@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Alert, Button } from "react-native";
+import { View, Text, TextInput, Alert, TouchableOpacity } from "react-native";
 import { Picker } from "@react-native-picker/picker"; // Import Picker for dropdown
 import styles from "../styles/styledcomponents";
 import { useRouter } from "expo-router";
@@ -83,12 +83,12 @@ export default function SignupScreen() {
         onChangeText={setPassword}
       />
 
-      <Button
+      <TouchableOpacity
+        style={[styles.button, styles.loginButton]}
         onPress={handleSignup}
-        title="Sign Up"
-        color="#11960c"
-        accessibilityLabel="Sign up for an account"
-      />
+      >
+        <Text style={styles.buttonText}>Sign In</Text>
+      </TouchableOpacity>
     </View>
   );
 }
