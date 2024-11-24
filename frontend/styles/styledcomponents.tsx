@@ -77,6 +77,9 @@ const styles = StyleSheet.create({
   signoutButton: {
     backgroundColor: "#FF0000", // Orange button for QR Code
   },
+  uploadButton : {
+    backgroundColor: "#FF0000", // Orange button for QR Code
+  },
   errorText: {
     color: "red",
     marginBottom: 10,
