@@ -67,7 +67,7 @@ export default function VoucherScreen() {
 
 <TouchableOpacity
   style={[styles.voucher, styles.voucherExtraLarge]}
-  onPress={() => handleRedeem(500, "$5 off any meal")}
+  onPress={() => handleRedeem(500, "2 Free Smart Meals")}
 >
   <Text style={styles.voucherText}>500 Points</Text>
   <Text style={styles.voucherSubText}>$5 off any meal</Text>

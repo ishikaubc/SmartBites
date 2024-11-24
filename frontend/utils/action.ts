@@ -1,5 +1,6 @@
 import { supabase } from "../utils/supabase";
 import { genSaltSync, hashSync, compareSync } from "bcrypt-ts";
+import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -23,58 +24,74 @@ export async function register(
   });
 
   const { data, error: selectError } = await supabase
-  .from('users')
-  .select("*")
-  .eq('email', email)
+    .from("users")
+    .select("*")
+    .eq("email", email);
 
-  if(data){
-    createWallet(data[0].wallet_id, data[0].id)
-  }else{
-    console.log("Error creating wallet")
+  if (data) {
+    createWallet(data[0].wallet_id, data[0].id);
+  } else {
+    console.log("Error creating wallet");
   }
 
   if (selectError) {
     console.log(selectError);
   }
-  
-  
+
   if (error) {
     console.log(error);
   }
 }
 
 export async function login(email: string, password: string) {
-  const { data, error } = await supabase
-    .from("users")
-    .select("*")
-    .match({ email: email.trim(), password: hashSync(password, salt) })
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("email", email.trim());
 
-  if (data && data.length > 0) {
-    AsyncStorage.setItem("id", data[0].id);
-    AsyncStorage.setItem("authToken", uuidv4());
-    AsyncStorage.setItem("email", data[0].email);
-    AsyncStorage.setItem("firstName", data[0].first_name);
-    AsyncStorage.setItem("lastName", data[0].last_name);
-    AsyncStorage.setItem("walletId", data[0].wallet_id);
-    AsyncStorage.setItem("orderHistoryId", data[0].order_history_id);
-    AsyncStorage.setItem("qrCode", data[0].qr_code);
-    AsyncStorage.setItem("role", data[0].role);
-  } else {
-    console.log("Invalid credentias/No user found !");
+    if (error) {
+      console.error("Supabase Error:", error.message);
+      throw new Error("Failed to fetch user data.");
+    }
+
+    if (data && data.length > 0) {
+      const user = data[0];
+      const isPasswordValid = compareSync(password, user.password);
+
+      if (!isPasswordValid) {
+        throw new Error("Invalid credentials or no user found!");
+      }
+
+      try {
+        // Store user information in AsyncStorage
+        await AsyncStorage.multiSet([
+          ["id", String(user.id)], // Convert numeric ID to string
+          ["authToken", uuidv4()], // Use uuidv4() for authToken
+          ["email", user.email],
+          ["firstName", user.first_name],
+          ["lastName", user.last_name],
+          ["walletId", user.wallet_id],
+          ["orderHistoryId", user.order_history_id],
+          ["qrCode", user.qr_code],
+          ["role", user.role],
+        ]);
+
+        // Return user data
+        return user;
+      } catch (storageError) {
+        console.error("AsyncStorage Error:", storageError);
+        throw new Error("Failed to save user data locally.");
+      }
+    } else {
+      throw new Error("Invalid credentials or no user found!");
+    }
+  } catch (error) {
+    console.error("Login Error:", error.message);
+    throw error;
   }
-
-  if (error) {
-    console.log(error);
-  }
-
-  return data;
 }
-
-
-export async function createWallet(
-  walletId,
-  userId
-) {
+export async function createWallet(walletId, userId) {
   const { error } = await supabase.from("wallet").insert({
     id: walletId,
     user_id: userId,
@@ -86,27 +103,27 @@ export async function createWallet(
   }
 }
 
-export async function fetchWalletData(id){
+export async function fetchWalletData(id) {
   const { data, error } = await supabase
-  .from("wallet")
-  .select("*")
-  .eq("user_id", id);
+    .from("wallet")
+    .select("*")
+    .eq("user_id", id);
 
-  if(error){
-    console.log(error)
+  if (error) {
+    console.log(error);
   }
 
   return data;
 }
 
-export async function fetchUserInfo(id){
+export async function fetchUserInfo(id) {
   const { data, error } = await supabase
-  .from("wallet")
-  .select("*")
-  .eq("user_id", id);
+    .from("wallet")
+    .select("*")
+    .eq("user_id", id);
 
-  if(error){
-    console.log(data)
+  if (error) {
+    console.log(data);
   }
 
   return data;
