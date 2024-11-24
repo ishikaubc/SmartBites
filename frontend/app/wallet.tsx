@@ -18,22 +18,14 @@ export default function WalletScreen() {
   const router = useRouter(); // Navigation hook
 
   useEffect(() => {
-    const fetchWalletData = async () => {
-      try {
-        // Fetch wallet data from AsyncStorage or API
-        const userPoints = await AsyncStorage.getItem("userPoints");
-        const userBalance = await AsyncStorage.getItem("userBalance");
+    const walletData = async() => {
+      const storedUserId = await AsyncStorage.getItem("id");
+      const data = await fetchWalletData(storedUserId);
+      setBalance(data[0].total_points)
+      setLoading(false)
+    }
 
-        setPoints(userPoints ? parseInt(userPoints) : 1500); // Default: 1500 points
-        setBalance(userBalance ? parseInt(userBalance) : 1000); // Default: 1000 points
-      } catch (error) {
-        Alert.alert("Error", "Failed to load wallet data.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchWalletData();
+    walletData()
   }, []);
 
   const handleRedeemPoints = async () => {

@@ -14,6 +14,7 @@ export default function MainPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState("");
+  const [firstName, setFirstName] = useState("")
   const [role, setRole] = useState("user");
 
   const handleSignOut = async () => {
@@ -26,13 +27,15 @@ export default function MainPage() {
       try {
         const token = await AsyncStorage.getItem("authToken"); // Retrieve the auth token
         const storedUserId = await AsyncStorage.getItem("id"); // Retrieve the user ID
+        const storedFirstName= await AsyncStorage.getItem("firstName");
         const storedRole = await AsyncStorage.getItem("role"); // Retrieve the role
 
-        if (!token || !storedUserId || !storedRole) {
+        if (!token || !storedUserId || !storedRole || !storedFirstName) {
           router.replace("/login"); // Redirect to Login if not authenticated
         } else {
           setUserId(storedUserId);
           setRole(storedRole);
+          setFirstName(storedFirstName)
         }
       } catch (error) {
         Alert.alert("Error", "Failed to load user data.");
@@ -54,7 +57,7 @@ export default function MainPage() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome, {userId}!</Text>
+      <Text style={styles.title}>Welcome, {firstName}!</Text>
       <Text style={styles.subtitle}>
         Role: {role.charAt(0).toUpperCase() + role.slice(1)}
       </Text>
