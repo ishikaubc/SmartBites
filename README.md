@@ -25,7 +25,7 @@ SmartBites is an innovative platform that:
 ### Technologies Used:
 - **Python** for backend logic and API integrations.
 - **JavaScript/TypeScript** for frontend development.
-- **PostgreSQL** for robust data handling.
+- **Supabase** for robust data handling.
 
 ## Challenges We Ran Into
 1. **Receipt Parsing**:
