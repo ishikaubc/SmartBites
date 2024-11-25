@@ -9,45 +9,59 @@ import {
 import { Camera, CameraView, CameraType } from "expo-camera"; // Barcode Scanner
 import * as ImagePicker from "expo-image-picker"; // For receipt upload
 import styles from "../styles/styledcomponents";
-import { fetchWalletData } from "../utils/action";
+import { fetchWalletData, fetchUserFromQR } from "../utils/action";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ScanBarcodePage() {
   const [hasPermission, setHasPermission] = useState(null); // Camera permission state
   const [scanned, setScanned] = useState(false); // Barcode scanned state
-  const [id, setUserId] = useState(""); // User ID state
+  const [barcode, setBarcode] = useState("")// Barcode value
+  const [id, setUserId] = useState(null); // User ID state
   const [walletPoints, setWalletPoints] = useState(0); // Wallet points state
   const [uploading, setUploading] = useState(false); // Loading state
   const [type, setType] = useState<CameraType>("back");
 
   // Request camera permission
   useEffect(() => {
+
+    const retrieveStudentId = async () =>{
+      try{
+        const userData = fetchUserFromQR(barcode) 
+        setUserId(userData[0].id)
+        
+      }catch(error){
+        console.log("Unexpeted error when fetching user id in QR page")
+      }
+
+    }
+
     const getCameraPermission = async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === "granted");
-
-      const storedId = await AsyncStorage.getItem("id");
-      setUserId(storedId)
     };
 
+    retrieveStudentId();
     getCameraPermission();
-  }, []);
 
-  const handleBarCodeScanned = async ({ data }) => {
+  }, [barcode]);
+
+  const handleBarCodeScanned = async ({data}) => {
     setScanned(true);
 
-    try {
+    console.log(data);
 
+    try {
+      setBarcode(data)
       // Fetch wallet data using user_id
       const walletData = await fetchWalletData(id);
 
       if (walletData && walletData.length > 0) {
-        const wallet = walletData[0]; // Wallet entry for the user
+        setWalletPoints(walletData[0].total_points)
 
         // Display user and wallet details
         Alert.alert(
           "Barcode Scanned!",
-          `User ID: ${id}\nWallet Points: ${wallet.total_points}`
+          `User ID: ${id}\nWallet Points: ${walletPoints}`
         );
 
       } else {
