@@ -23,27 +23,13 @@ export default function ScanBarcodePage() {
 
   // Request camera permission
   useEffect(() => {
-
-    const retrieveStudentId = async () =>{
-      try{
-        const userData = fetchUserFromQR(barcode) 
-        setUserId(userData[0].id)
-        
-      }catch(error){
-        console.log("Unexpeted error when fetching user id in QR page")
-      }
-
-    }
-
     const getCameraPermission = async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === "granted");
     };
-
-    retrieveStudentId();
     getCameraPermission();
 
-  }, [barcode]);
+  }, []);
 
   const handleBarCodeScanned = async ({data}) => {
     setScanned(true);
@@ -53,6 +39,10 @@ export default function ScanBarcodePage() {
     try {
       setBarcode(data)
       // Fetch wallet data using user_id
+      const userData = fetchUserFromQR(barcode) 
+
+      setUserId(userData[0].id)
+
       const walletData = await fetchWalletData(id);
 
       if (walletData && walletData.length > 0) {
