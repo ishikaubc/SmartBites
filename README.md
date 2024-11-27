@@ -1,5 +1,12 @@
 # SmartBites
 
+https://github.com/user-attachments/assets/500c96d7-6740-4f3d-ad30-fd4888bd320a
+
+
+https://github.com/user-attachments/assets/9775ded2-fed0-4251-93ec-958da59d46ae
+
+
+
 ## Inspiration
 The idea for SmartBites stems from a need to combine convenience and technology to promote mindful eating habits. With increasing reliance on digital tools, we wanted to build an app that not only simplifies meal tracking but also rewards users for smart choices. Inspired by the popularity of gamification in apps, we sought to create a system that combines receipt scanning, instant rewards, and user-friendly meal management to encourage healthier lifestyles.
 
