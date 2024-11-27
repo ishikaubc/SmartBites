@@ -1,7 +1,7 @@
 # SmartBites
 
-https://github.com/user-attachments/assets/500c96d7-6740-4f3d-ad30-fd4888bd320a  https://github.com/user-attachments/assets/4f5411bd-4db8-4b75-a73b-2025a85efbf9
-
+https://github.com/user-attachments/assets/500c96d7-6740-4f3d-ad30-fd4888bd320a  
+https://github.com/user-attachments/assets/4f5411bd-4db8-4b75-a73b-2025a85efbf9
 https://github.com/user-attachments/assets/9775ded2-fed0-4251-93ec-958da59d46ae
 
 
